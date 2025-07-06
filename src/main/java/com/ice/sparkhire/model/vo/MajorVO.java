@@ -7,10 +7,11 @@ import java.io.Serializable;
 
 /**
  * @author <a href="https://github.com/Ice-Programmer">chenjiahan</a>
- * @create 2025/7/6 15:52
+ * @create 2025/7/6 16:15
  */
 @Data
-public class SchoolVO implements Serializable {
+public class MajorVO implements Serializable {
+
 
     /**
      * id
@@ -18,11 +19,10 @@ public class SchoolVO implements Serializable {
     private Long id;
 
     /**
-     * 学校名称
+     * 专业名称
      */
-    private String schoolName;
-
+    private String majorName;
 
     @Serial
-    private static final long serialVersionUID = -7962815157474729654L;
+    private static final long serialVersionUID = -1363057206168091611L;
 }

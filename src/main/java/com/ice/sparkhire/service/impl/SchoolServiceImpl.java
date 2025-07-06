@@ -21,7 +21,7 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School>
         implements SchoolService {
 
     @Override
-    @CustomCache(key = CacheConstant.SCHOOL_LIST_KEY, duration = CacheConstant.SCHOOL_LIST_TTL)
+    @CustomCache(key = CacheConstant.SCHOOL_LIST_KEY, duration = CacheConstant.MONTH_EXPIRE_TIME)
     public List<SchoolVO> getSchoolList() {
         return baseMapper.selectSchoolList();
     }
