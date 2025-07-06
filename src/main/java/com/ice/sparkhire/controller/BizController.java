@@ -1,6 +1,7 @@
 package com.ice.sparkhire.controller;
 
 import cn.hutool.core.util.RandomUtil;
+import com.ice.sparkhire.auth.IgnoreAuth;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
@@ -47,7 +48,8 @@ public class BizController {
      * @param verifyCodeRequest 邮箱请求类
      * @return 验证码
      */
-    @PostMapping("/verify/code")
+    @PostMapping("/verify/code/")
+    @IgnoreAuth
     public BaseResponse<String> sendVerifyCode(@RequestBody VerifyCodeRequest verifyCodeRequest) {
         if (verifyCodeRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "发送邮箱为空");
