@@ -9,6 +9,7 @@ create table if not exists `user`
 (
     `id`          bigint auto_increment comment 'id' primary key,
     `username`    varchar(128)                       not null comment '用户昵称',
+    `user_avatar` varchar(128)                       null comment '用户头像',
     `email`       varchar(256)                       not null comment '邮箱',
     `gender`      tinyint  default 1                 not null comment '0-女 1-男',
     `status`      tinyint  default 0                 not null comment '用户状态(0-正常 1-封禁)',
@@ -16,7 +17,6 @@ create table if not exists `user`
     `update_time` datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     `is_delete`   tinyint  default 0                 not null comment '是否删除',
     unique key uk_email (`email`),
-    unique key uk_username (`username`),
     index idx_email (`email`)
 ) comment '用户' collate = utf8mb4_unicode_ci;
 

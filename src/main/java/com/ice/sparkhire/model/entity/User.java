@@ -29,6 +29,11 @@ public class User {
     private String username;
 
     /**
+     * 用户头像
+     */
+    private String userAvatar;
+
+    /**
      * 邮箱
      */
     private String email;

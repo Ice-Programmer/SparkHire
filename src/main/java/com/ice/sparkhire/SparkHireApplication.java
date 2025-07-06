@@ -3,6 +3,7 @@ package com.ice.sparkhire;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.kafka.annotation.EnableKafka;
 
 /**
  * 项目启动类
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
+@EnableKafka
 public class SparkHireApplication {
     public static void main(String[] args) {
         SpringApplication.run(SparkHireApplication.class, args);
