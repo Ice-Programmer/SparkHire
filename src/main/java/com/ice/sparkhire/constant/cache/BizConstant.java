@@ -20,4 +20,14 @@ public interface BizConstant {
      * 邮箱验证码 key
      */
     String EMAIL_VERIFY_CODE_PREFIX = BIZ_PREFIX + "auth:email:verify:code:";
+
+    /**
+     * 学校列表类型
+     **/
+    String SCHOOL_LIST_KEY = "information:school:list";
+
+    /**
+     * 学校列表过期时间（30 天）
+     */
+    long SCHOOL_LIST_TTL = 30 * 24 * 60 * 60L;
 }
