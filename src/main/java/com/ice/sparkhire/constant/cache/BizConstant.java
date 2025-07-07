@@ -29,5 +29,10 @@ public interface BizConstant {
     /**
      * 专业列表 key
      **/
-    String MAJOR_LIST_KEY = BIZ_PREFIX + "information:school:list";
+    String MAJOR_LIST_KEY = BIZ_PREFIX + "information:major:list";
+
+    /**
+     * 证书列表 key
+     **/
+    String QUALIFICATION_LIST_KEY = BIZ_PREFIX + "information:qualification:list";
 }

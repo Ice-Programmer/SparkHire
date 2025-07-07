@@ -4,8 +4,10 @@ import com.ice.sparkhire.auth.IgnoreAuth;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.model.vo.MajorVO;
+import com.ice.sparkhire.model.vo.QualificationVO;
 import com.ice.sparkhire.model.vo.SchoolVO;
 import com.ice.sparkhire.service.MajorService;
+import com.ice.sparkhire.service.QualificationService;
 import com.ice.sparkhire.service.SchoolService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +32,9 @@ public class InformationController {
     @Resource
     private MajorService majorService;
 
+    @Resource
+    private QualificationService qualificationService;
+
     /**
      * 获取学校列表
      *
@@ -52,4 +57,14 @@ public class InformationController {
         return ResultUtils.success(majorService.getMajorList());
     }
 
+    /**
+     * 获取证书列表
+     *
+     * @return 证书列表
+     */
+    @GetMapping("/qualification/list")
+    @IgnoreAuth
+    public BaseResponse<List<QualificationVO>> getQualificationList() {
+        return ResultUtils.success(qualificationService.getQualificationList());
+    }
 }
