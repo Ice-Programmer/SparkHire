@@ -112,8 +112,7 @@ create table if not exists `major`
     `major_name`  varchar(256)                       not null comment '专业名称',
     `post_num`    int      default 0                 not null comment '相关数量',
     `create_time` datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    `update_time` datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    `is_delete`   tinyint  default 0                 not null comment '是否删除'
+    `update_time` datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间'
 ) comment '专业' collate = utf8mb4_unicode_ci;
 
 -- 学校表
@@ -140,6 +139,7 @@ create table if not exists `education_experience`
     `create_time`    datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     `update_time`    datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     `is_delete`      tinyint  default 0                 not null comment '是否删除',
+    unique key uk_user_education_tye (`user_id`, `education_type`),
     index idx_user_id (user_id)
 ) comment '教育经历' collate = utf8mb4_unicode_ci;
 

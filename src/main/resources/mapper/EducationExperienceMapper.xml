@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ice.sparkhire.mapper.EducationExperienceMapper">
+
+    <resultMap id="BaseResultMap" type="com.ice.sparkhire.model.entity.EducationExperience">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="schoolId" column="school_id" jdbcType="BIGINT"/>
+            <result property="educationType" column="education_type" jdbcType="TINYINT"/>
+            <result property="beginYear" column="begin_year" jdbcType="INTEGER"/>
+            <result property="endYear" column="end_year" jdbcType="INTEGER"/>
+            <result property="majorId" column="major_id" jdbcType="BIGINT"/>
+            <result property="activity" column="activity" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <select id="selectMyEducationExpInfo" resultType="com.ice.sparkhire.model.vo.EducationExperienceVO">
+        select e.id,
+               e.school_id,
+               e.education_type,
+               e.begin_year,
+               e.end_year,
+               e.major_id,
+               e.activity,
+               m.major_name,
+               s.school_name
+        from education_experience e
+                 left join major m on m.id = e.major_id
+                 left join school s on s.id = e.school_id
+        where user_id = #{userId}
+          and e.is_delete = 0;
+    </select>
+</mapper>

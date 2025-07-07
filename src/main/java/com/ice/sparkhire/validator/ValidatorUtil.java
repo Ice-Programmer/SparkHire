@@ -1,5 +1,7 @@
 package com.ice.sparkhire.validator;
 
+import com.ice.sparkhire.constant.ErrorCode;
+import com.ice.sparkhire.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Pattern;
@@ -21,6 +23,18 @@ public class ValidatorUtil {
             return false;
         }
         return Pattern.matches(EMAIL_PATTERN, email);
+    }
+
+    /**
+     * 校验年份
+     *
+     * @param beginYear 开始年份
+     * @param endYear   结束年份
+     */
+    public static void checkYearRange(Integer beginYear, Integer endYear) {
+        if (beginYear == null || endYear == null || beginYear > endYear) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "开始年份不能大于结束年份！");
+        }
     }
 
 }
