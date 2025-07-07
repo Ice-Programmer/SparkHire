@@ -14,10 +14,9 @@ public enum UserRoleEnum implements BaseEnum<String> {
 
     ADMIN("管理员", "admin"),
     SUPER_ADMIN("超级管理员", "super-admin"),
-    EMPLOYEE("", "teacher"),
-    STUDENT("学生", "student"),
+    EMPLOYEE("求职者", "employee"),
     GUEST("访客", "visitor"),
-    EDITOR("编辑者", "editor"),
+    EMPLOYER("招聘者", "employer"),
     BAN("禁用", "ban");
 
 

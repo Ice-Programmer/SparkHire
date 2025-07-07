@@ -1,11 +1,13 @@
 package com.ice.sparkhire.controller;
 
+import com.ice.sparkhire.annotation.MustRole;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.model.dto.employee.EmployeeAddRequest;
 import com.ice.sparkhire.model.dto.employee.EmployeeEditRequest;
+import com.ice.sparkhire.model.enums.UserRoleEnum;
 import com.ice.sparkhire.service.EmployeeService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -34,6 +36,7 @@ public class EmployeeController {
      * @return 求职者 id
      */
     @PostMapping("/add")
+    @MustRole(UserRoleEnum.EMPLOYEE)
     public BaseResponse<Long> addEmployee(@RequestBody @Valid EmployeeAddRequest employeeAddRequest) {
         if (employeeAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -51,6 +54,7 @@ public class EmployeeController {
      * @return 求职者 id
      */
     @PostMapping("/edit")
+    @MustRole(UserRoleEnum.EMPLOYEE)
     public BaseResponse<Boolean> editEmployee(@RequestBody @Valid EmployeeEditRequest employeeEditRequest) {
         if (employeeEditRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
