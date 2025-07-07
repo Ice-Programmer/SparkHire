@@ -14,7 +14,7 @@ import com.ice.sparkhire.model.enums.VerifyModeEnum;
 import com.ice.sparkhire.mq.constant.MailMessageConstant;
 import com.ice.sparkhire.mq.producer.EmailMessageProducer;
 import com.ice.sparkhire.mq.task.EmailMessageTask;
-import com.ice.sparkhire.validation.ValidatorUtil;
+import com.ice.sparkhire.validator.ValidatorUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.DigestUtils;

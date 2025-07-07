@@ -12,7 +12,7 @@ import com.ice.sparkhire.manager.TokenManager;
 import com.ice.sparkhire.model.dto.login.UserMailLoginRequest;
 import com.ice.sparkhire.service.UserService;
 import com.ice.sparkhire.utils.DeviceUtil;
-import com.ice.sparkhire.validation.ValidatorUtil;
+import com.ice.sparkhire.validator.ValidatorUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

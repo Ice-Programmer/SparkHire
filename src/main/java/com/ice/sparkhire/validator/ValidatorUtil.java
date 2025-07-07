@@ -1,4 +1,4 @@
-package com.ice.sparkhire.validation;
+package com.ice.sparkhire.validator;
 
 import org.apache.commons.lang3.StringUtils;
 

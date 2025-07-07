@@ -89,6 +89,7 @@ create table if not exists `employee`
     `create_time`     datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     `update_time`     datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     `is_delete`       tinyint  default 0                 not null comment '是否删除',
+    unique key `uk_user_id` (`user_id`),
     index idx_user_id (`user_id`)
 ) comment '求职者' collate = utf8mb4_unicode_ci;
 

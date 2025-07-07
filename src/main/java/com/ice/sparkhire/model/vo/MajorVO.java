@@ -12,7 +12,6 @@ import java.io.Serializable;
 @Data
 public class MajorVO implements Serializable {
 
-
     /**
      * id
      */
