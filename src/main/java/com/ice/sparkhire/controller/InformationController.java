@@ -3,9 +3,11 @@ package com.ice.sparkhire.controller;
 import com.ice.sparkhire.auth.IgnoreAuth;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
+import com.ice.sparkhire.model.vo.IndustryVO;
 import com.ice.sparkhire.model.vo.MajorVO;
 import com.ice.sparkhire.model.vo.QualificationVO;
 import com.ice.sparkhire.model.vo.SchoolVO;
+import com.ice.sparkhire.service.IndustryService;
 import com.ice.sparkhire.service.MajorService;
 import com.ice.sparkhire.service.QualificationService;
 import com.ice.sparkhire.service.SchoolService;
@@ -34,6 +36,9 @@ public class InformationController {
 
     @Resource
     private QualificationService qualificationService;
+
+    @Resource
+    private IndustryService industryService;
 
     /**
      * 获取学校列表
@@ -66,5 +71,16 @@ public class InformationController {
     @IgnoreAuth
     public BaseResponse<List<QualificationVO>> getQualificationList() {
         return ResultUtils.success(qualificationService.getQualificationList());
+    }
+
+    /**
+     * 获取行业列表
+     *
+     * @return 行业列表
+     */
+    @GetMapping("/industry/list")
+    @IgnoreAuth
+    public BaseResponse<List<IndustryVO>> getIndustryList() {
+        return ResultUtils.success(industryService.getIndustryList());
     }
 }

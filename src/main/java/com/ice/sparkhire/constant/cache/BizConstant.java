@@ -35,4 +35,9 @@ public interface BizConstant {
      * 证书列表 key
      **/
     String QUALIFICATION_LIST_KEY = BIZ_PREFIX + "information:qualification:list";
+
+    /**
+     * 行业列表 key
+     **/
+    String INDUSTRY_LIST_KEY = BIZ_PREFIX + "information:industry:list";
 }
