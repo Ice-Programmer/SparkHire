@@ -3,14 +3,8 @@ package com.ice.sparkhire.controller;
 import com.ice.sparkhire.auth.IgnoreAuth;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
-import com.ice.sparkhire.model.vo.IndustryVO;
-import com.ice.sparkhire.model.vo.MajorVO;
-import com.ice.sparkhire.model.vo.QualificationVO;
-import com.ice.sparkhire.model.vo.SchoolVO;
-import com.ice.sparkhire.service.IndustryService;
-import com.ice.sparkhire.service.MajorService;
-import com.ice.sparkhire.service.QualificationService;
-import com.ice.sparkhire.service.SchoolService;
+import com.ice.sparkhire.model.vo.*;
+import com.ice.sparkhire.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +33,9 @@ public class InformationController {
 
     @Resource
     private IndustryService industryService;
+
+    @Resource
+    private CareerService careerService;
 
     /**
      * 获取学校列表
@@ -82,5 +79,16 @@ public class InformationController {
     @IgnoreAuth
     public BaseResponse<List<IndustryVO>> getIndustryList() {
         return ResultUtils.success(industryService.getIndustryList());
+    }
+
+    /**
+     * 获取职业列表
+     *
+     * @return 职业列表
+     */
+    @GetMapping("/career/list")
+    @IgnoreAuth
+    public BaseResponse<List<CareerVO>> getCareerList() {
+        return ResultUtils.success(careerService.getCareerList());
     }
 }

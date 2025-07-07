@@ -40,4 +40,9 @@ public interface BizConstant {
      * 行业列表 key
      **/
     String INDUSTRY_LIST_KEY = BIZ_PREFIX + "information:industry:list";
+
+    /**
+     * 职业列表 key
+     **/
+    String CAREER_LIST_KEY = BIZ_PREFIX + "information:career:list";
 }
