@@ -230,13 +230,3 @@ create table if not exists `city`
     `update_time`   datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     `is_delete`     tinyint  default 0                 not null comment '是否删除'
 ) comment '城市' collate = utf8mb4_unicode_ci;
-
--- 省份类型
-create table if not exists `province_type`
-(
-    `id`            bigint auto_increment comment 'id' primary key,
-    `province_name` varchar(128)                       not null comment '省份名称',
-    `create_time`   datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    `update_time`   datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    `is_delete`     tinyint  default 0                 not null comment '是否删除'
-) comment '省份类型' collate = utf8mb4_unicode_ci;

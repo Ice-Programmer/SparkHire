@@ -2,6 +2,9 @@ package com.ice.sparkhire.service;
 
 import com.ice.sparkhire.model.entity.City;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ice.sparkhire.model.vo.CityVO;
+
+import java.util.List;
 
 /**
  * @author chenjiahan
@@ -16,4 +19,11 @@ public interface CityService extends IService<City> {
      * @param cityId 城市 id
      */
     void existCity(Long cityId);
+
+    /**
+     * 城市列表
+     *
+     * @return 城市列表
+     */
+    List<CityVO> getCityList();
 }

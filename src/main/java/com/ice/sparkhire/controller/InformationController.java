@@ -37,6 +37,9 @@ public class InformationController {
     @Resource
     private CareerService careerService;
 
+    @Resource
+    private CityService cityService;
+
     /**
      * 获取学校列表
      *
@@ -90,5 +93,16 @@ public class InformationController {
     @IgnoreAuth
     public BaseResponse<List<CareerVO>> getCareerList() {
         return ResultUtils.success(careerService.getCareerList());
+    }
+
+    /**
+     * 城市列表
+     *
+     * @return 城市列表
+     */
+    @GetMapping("/city/list")
+    @IgnoreAuth
+    public BaseResponse<List<CityVO>> getCityList() {
+        return ResultUtils.success(cityService.getCityList());
     }
 }
