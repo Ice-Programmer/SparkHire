@@ -6576,7 +6576,8 @@ INSERT INTO spark_hire.major (id, major_name, post_num, create_time, update_time
 INSERT INTO spark_hire.major (id, major_name, post_num, create_time, update_time) VALUES (706, '粒子物理与原子核物理', 0, '2024-02-23 14:49:57', '2024-02-23 14:49:57');
 INSERT INTO spark_hire.major (id, major_name, post_num, create_time, update_time) VALUES (707, '心理学与心理健康', 0, '2024-02-23 14:49:57', '2024-02-23 14:49:57');
 INSERT INTO spark_hire.major (id, major_name, post_num, create_time, update_time) VALUES (708, '舞蹈艺术', 0, '2024-02-23 14:49:57', '2024-02-23 14:49:57');
-INSERT INTO spark_hire.major (id, major_name, post_num, create_time, update_time) VALUES (709, '免疫学', 0, '2024-02-23 14:49:57', '2024-02-23 14:49:57');
+INSERT INTO spark_hire.major (id, major_name, post_num, create_time, update_time)
+VALUES (709, '面议学', 0, '2024-02-23 14:49:57', '2024-02-23 14:49:57');
 INSERT INTO spark_hire.major (id, major_name, post_num, create_time, update_time) VALUES (710, '药物化学', 0, '2024-02-23 14:49:57', '2024-02-23 14:49:57');
 INSERT INTO spark_hire.major (id, major_name, post_num, create_time, update_time) VALUES (711, '光子学', 0, '2024-02-23 14:49:57', '2024-02-23 14:49:57');
 INSERT INTO spark_hire.major (id, major_name, post_num, create_time, update_time) VALUES (712, '军事学', 0, '2024-02-23 14:49:57', '2024-02-23 14:49:57');

@@ -1,11 +1,16 @@
 package com.ice.sparkhire.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.annotation.CustomCache;
+import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.constant.cache.CacheConstant;
+import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.mapper.CareerTypeMapper;
+import com.ice.sparkhire.mapper.IndustryMapper;
 import com.ice.sparkhire.model.entity.Career;
 import com.ice.sparkhire.model.entity.CareerType;
+import com.ice.sparkhire.model.entity.Industry;
 import com.ice.sparkhire.model.vo.CareerVO;
 import com.ice.sparkhire.service.CareerService;
 import com.ice.sparkhire.mapper.CareerMapper;
@@ -28,6 +33,9 @@ public class CareerServiceImpl extends ServiceImpl<CareerMapper, Career>
 
     @Resource
     private CareerTypeMapper careerTypeMapper;
+
+    @Resource
+    private IndustryMapper industryMapper;
 
     @Override
     @CustomCache(key = CacheConstant.CAREER_LIST_KEY, duration = CacheConstant.MONTH_EXPIRE_TIME)
@@ -54,6 +62,24 @@ public class CareerServiceImpl extends ServiceImpl<CareerMapper, Career>
         }
 
         return careerVOList;
+    }
+
+    @Override
+    public void checkCareerAndIndustryExist(long careerId, long industryId) {
+        if (careerId <= 0 || industryId <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "职业 id 或 行业 id 错误!");
+        }
+        // 1. 校验职业是否存在
+        boolean careerExisted = baseMapper.exists(Wrappers.<Career>lambdaQuery()
+                .eq(Career::getId, careerId));
+        boolean exists = industryMapper.exists(Wrappers.<Industry>lambdaQuery()
+                .eq(Industry::getId, industryId));
+
+        if (careerExisted && exists) {
+            return;
+        }
+
+        throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "职业或行业不存在");
     }
 }
 

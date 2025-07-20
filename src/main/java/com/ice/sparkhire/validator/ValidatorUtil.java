@@ -16,6 +16,8 @@ public class ValidatorUtil {
 
     // 邮箱正则表达式
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    // 期望薪资表达式
+    private static final String SALARY_EXPECTATION_PATTERN = "^\\s*(\\d{1,6})?\\s*-\\s*(\\d{1,6})?\\s*$";
 
     // 校验邮箱是否有效
     public static boolean isValidEmail(String email) {
@@ -35,6 +37,16 @@ public class ValidatorUtil {
         if (beginYear == null || endYear == null || beginYear > endYear) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "开始年份不能大于结束年份！");
         }
+    }
+
+    /**
+     * 期望薪资格式是否合法
+     *
+     * @param salaryExpectation 期望薪资
+     * @return 薪资是否合法
+     */
+    public static boolean isValidSalaryExpectation(String salaryExpectation) {
+        return StringUtils.isNotBlank(salaryExpectation) && Pattern.matches(SALARY_EXPECTATION_PATTERN, salaryExpectation);
     }
 
 }

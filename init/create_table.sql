@@ -213,10 +213,12 @@ create table if not exists `employee_wish_career`
     `user_id`            bigint                                 not null comment '用户id',
     `career_id`          bigint                                 not null comment '职业id',
     `industry_id`        bigint       default 0                 not null comment '行业id',
-    `salary_expectation` varchar(256) default '-'               not null comment '薪水要求（例如：10-15,-免疫）',
+    `salary_expectation` varchar(256) default '-' not null comment '薪水要求（例如：10-15,-面议）',
     `create_time`        datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
     `update_time`        datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    `is_delete`          tinyint      default 0                 not null comment '是否删除'
+    `is_delete`          tinyint      default 0   not null comment '是否删除',
+    unique key uk_user_industry_career (`user_id`, `career_id`, `industry_id`),
+    index idx_user_id (`user_id`)
 ) comment '应聘者期望岗位' collate = utf8mb4_unicode_ci;
 
 -- 城市表
