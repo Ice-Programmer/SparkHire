@@ -1,10 +1,13 @@
 package com.ice.sparkhire.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.auth.UserBasicInfo;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
+import com.ice.sparkhire.exception.ThrowUtils;
 import com.ice.sparkhire.model.dto.career.WishCareerAddRequest;
+import com.ice.sparkhire.model.dto.career.WishCareerEditRequest;
 import com.ice.sparkhire.model.entity.EmployeeWishCareer;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.CareerService;
@@ -14,8 +17,12 @@ import com.ice.sparkhire.validator.ValidatorUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import java.util.Objects;
 
 /**
  * @author chenjiahan
@@ -57,6 +64,40 @@ public class EmployeeWishCareerServiceImpl extends ServiceImpl<EmployeeWishCaree
         log.info("user 「{}」add new wish career: {}", currentUser, employeeWishCareer);
 
         return employeeWishCareer.getId();
+    }
+
+    @Override
+    public Boolean editWishCareer(WishCareerEditRequest wishCareerEditRequest) {
+        // 获取当前登录用户
+        UserBasicInfo currentUser = SecurityContext.getCurrentUser();
+
+        Long id = wishCareerEditRequest.getId();
+        Long careerId = wishCareerEditRequest.getCareerId();
+        Long industryId = wishCareerEditRequest.getIndustryId();
+        String salaryExpectation = wishCareerEditRequest.getSalaryExpectation();
+
+        // 判断是否存在
+        EmployeeWishCareer oldWishCareer = baseMapper.selectOne(Wrappers.<EmployeeWishCareer>lambdaQuery()
+                .eq(EmployeeWishCareer::getId, id));
+
+        ThrowUtils.throwIf(ObjectUtils.isEmpty(oldWishCareer), ErrorCode.NOT_FOUND_ERROR, "数据不存在！");
+        if (!Objects.equals(oldWishCareer.getUserId(), currentUser.getId())) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "仅能操作本人数据！");
+        }
+
+        // 校验参数
+        checkParams(careerId, industryId, salaryExpectation);
+
+        // 更新数据
+        BeanUtils.copyProperties(wishCareerEditRequest, oldWishCareer);
+        try {
+            baseMapper.updateById(oldWishCareer);
+        } catch (Exception exception) {
+            log.error(exception.getMessage());
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "更新数据失败! " + exception.getMessage());
+        }
+
+        return true;
     }
 
     /**

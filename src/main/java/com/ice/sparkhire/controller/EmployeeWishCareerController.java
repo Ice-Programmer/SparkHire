@@ -1,10 +1,13 @@
 package com.ice.sparkhire.controller;
 
+import com.ice.sparkhire.annotation.MustRole;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.model.dto.career.WishCareerAddRequest;
+import com.ice.sparkhire.model.dto.career.WishCareerEditRequest;
+import com.ice.sparkhire.model.enums.UserRoleEnum;
 import com.ice.sparkhire.service.EmployeeWishCareerService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,11 +33,32 @@ public class EmployeeWishCareerController {
      * @return 期望职业 id
      */
     @PostMapping("/add")
+    @MustRole(UserRoleEnum.EMPLOYEE)
     public BaseResponse<Long> addWishCareer(@RequestBody WishCareerAddRequest wishCareerAddRequest) {
         if (wishCareerAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
         return ResultUtils.success(employeeWishCareerService.addWishCareer(wishCareerAddRequest));
+    }
+
+    /**
+     * 编辑期望职业
+     *
+     * @param wishCareerEditRequest 编辑期望职业
+     * @return 编辑成功
+     */
+    @PostMapping("/edit")
+//    @MustRole(UserRoleEnum.EMPLOYEE)
+    public BaseResponse<Boolean> updateWishCareer(@RequestBody WishCareerEditRequest wishCareerEditRequest) {
+        if (wishCareerEditRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long wishCareerId = wishCareerEditRequest.getId();
+        if (wishCareerId == null || wishCareerId <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        return ResultUtils.success(employeeWishCareerService.editWishCareer(wishCareerEditRequest));
     }
 }

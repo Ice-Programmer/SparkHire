@@ -1,6 +1,7 @@
 package com.ice.sparkhire.service;
 
 import com.ice.sparkhire.model.dto.career.WishCareerAddRequest;
+import com.ice.sparkhire.model.dto.career.WishCareerEditRequest;
 import com.ice.sparkhire.model.entity.EmployeeWishCareer;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -18,4 +19,12 @@ public interface EmployeeWishCareerService extends IService<EmployeeWishCareer> 
      * @return 期望职业 id
      */
     Long addWishCareer(WishCareerAddRequest wishCareerAddRequest);
+
+    /**
+     * 编辑期望职业
+     *
+     * @param wishCareerEditRequest 编辑期望职业
+     * @return 编辑成功
+     */
+    Boolean editWishCareer(WishCareerEditRequest wishCareerEditRequest);
 }
