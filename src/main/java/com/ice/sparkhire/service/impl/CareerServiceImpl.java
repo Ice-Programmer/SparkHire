@@ -3,6 +3,7 @@ package com.ice.sparkhire.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.annotation.CustomCache;
+import com.ice.sparkhire.cache.LocalCache;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.constant.cache.CacheConstant;
 import com.ice.sparkhire.exception.BusinessException;
@@ -15,11 +16,14 @@ import com.ice.sparkhire.model.vo.CareerVO;
 import com.ice.sparkhire.service.CareerService;
 import com.ice.sparkhire.mapper.CareerMapper;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
  * @createDate 2025-07-07 20:21:25
  */
 @Service
+@Slf4j
 public class CareerServiceImpl extends ServiceImpl<CareerMapper, Career>
         implements CareerService {
 
@@ -81,8 +86,14 @@ public class CareerServiceImpl extends ServiceImpl<CareerMapper, Career>
 
         throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "职业或行业不存在");
     }
+
+    @Override
+    public void refreshCareerMapCache() {
+        // todo 分布式事务改造
+        List<Career> careerList = baseMapper.selectList(null);
+        Map<Long, Career> careerMap = careerList.stream()
+                .collect(Collectors.toMap(Career::getId, Function.identity()));
+        LocalCache.setCareerMap(careerMap);
+        log.info("refresh career map cache");
+    }
 }
-
-
-
-

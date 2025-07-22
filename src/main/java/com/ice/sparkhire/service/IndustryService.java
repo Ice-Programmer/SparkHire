@@ -19,4 +19,9 @@ public interface IndustryService extends IService<Industry> {
      * @return 行业列表
      */
     List<IndustryVO> getIndustryList();
+
+    /**
+     * 刷新行业缓存
+     */
+    void refreshIndustryMapCache();
 }

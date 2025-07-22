@@ -4,6 +4,9 @@ import com.ice.sparkhire.model.dto.career.WishCareerAddRequest;
 import com.ice.sparkhire.model.dto.career.WishCareerEditRequest;
 import com.ice.sparkhire.model.entity.EmployeeWishCareer;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ice.sparkhire.model.vo.EmployeeWishCareerVO;
+
+import java.util.List;
 
 /**
  * @author chenjiahan
@@ -27,4 +30,12 @@ public interface EmployeeWishCareerService extends IService<EmployeeWishCareer> 
      * @return 编辑成功
      */
     Boolean editWishCareer(WishCareerEditRequest wishCareerEditRequest);
+
+    /**
+     * 根据用户 id 获取期望职业
+     *
+     * @param userId 用户 id
+     * @return 期望职业列表
+     */
+    List<EmployeeWishCareerVO> getWishCareerVOListByUserId(Long userId);
 }

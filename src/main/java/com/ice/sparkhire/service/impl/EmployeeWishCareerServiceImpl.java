@@ -3,12 +3,17 @@ package com.ice.sparkhire.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.cache.LocalCache;
+import com.ice.sparkhire.constant.CommonConstant;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;
 import com.ice.sparkhire.model.dto.career.WishCareerAddRequest;
 import com.ice.sparkhire.model.dto.career.WishCareerEditRequest;
+import com.ice.sparkhire.model.entity.Career;
 import com.ice.sparkhire.model.entity.EmployeeWishCareer;
+import com.ice.sparkhire.model.entity.Industry;
+import com.ice.sparkhire.model.vo.EmployeeWishCareerVO;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.CareerService;
 import com.ice.sparkhire.service.EmployeeWishCareerService;
@@ -22,7 +27,10 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author chenjiahan
@@ -98,6 +106,32 @@ public class EmployeeWishCareerServiceImpl extends ServiceImpl<EmployeeWishCaree
         }
 
         return true;
+    }
+
+    @Override
+    public List<EmployeeWishCareerVO> getWishCareerVOListByUserId(Long userId) {
+        // 获取基础信息
+        List<EmployeeWishCareer> wishCareerList = baseMapper.selectList(Wrappers.<EmployeeWishCareer>lambdaQuery()
+                .eq(EmployeeWishCareer::getUserId, userId));
+
+        // 获取扩展信息
+        Map<Long, Industry> industryMap = LocalCache.getIndustryMap();
+        Map<Long, Career> careerMap = LocalCache.getCareerMap();
+
+        return wishCareerList.stream().map((wishCareer) -> {
+            EmployeeWishCareerVO wishCareerVO = new EmployeeWishCareerVO();
+            BeanUtils.copyProperties(wishCareer, wishCareerVO);
+            // NPE!!!
+            String careerName = Optional.ofNullable(careerMap.get(wishCareer.getCareerId()))
+                    .map(Career::getCareerName)
+                    .orElse(CommonConstant.UNKNOWN);
+            wishCareerVO.setCareerName(careerName);
+            String industryName = Optional.of(industryMap.get(wishCareer.getIndustryId()))
+                    .map(Industry::getIndustryName)
+                    .orElse(CommonConstant.UNKNOWN);
+            wishCareerVO.setIndustryName(industryName);
+            return wishCareerVO;
+        }).toList();
     }
 
     /**

@@ -23,4 +23,9 @@ public interface CommonConstant {
      * 降序
      **/
     String SORT_ORDER_DESC = "descend";
+
+    /**
+     * 未知
+     */
+    String UNKNOWN = "unknown";
 }

@@ -2,6 +2,7 @@ package com.ice.sparkhire.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.annotation.CustomCache;
+import com.ice.sparkhire.cache.LocalCache;
 import com.ice.sparkhire.constant.cache.CacheConstant;
 import com.ice.sparkhire.mapper.IndustryTypeMapper;
 import com.ice.sparkhire.model.entity.Industry;
@@ -10,11 +11,13 @@ import com.ice.sparkhire.model.vo.IndustryVO;
 import com.ice.sparkhire.service.IndustryService;
 import com.ice.sparkhire.mapper.IndustryMapper;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
  * @createDate 2025-07-07 19:58:24
  */
 @Service
+@Slf4j
 public class IndustryServiceImpl extends ServiceImpl<IndustryMapper, Industry>
         implements IndustryService {
 
@@ -54,6 +58,16 @@ public class IndustryServiceImpl extends ServiceImpl<IndustryMapper, Industry>
         }
 
         return industryVOList;
+    }
+
+    @Override
+    public void refreshIndustryMapCache() {
+        // todo 分布式改造
+        List<Industry> industryList = baseMapper.selectList(null);
+        Map<Long, Industry> industryMap = industryList.stream()
+                .collect(Collectors.toMap(Industry::getId, Function.identity()));
+        LocalCache.setIndustryMap(industryMap);
+        log.info("refresh industry map...");
     }
 }
 

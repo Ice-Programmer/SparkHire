@@ -27,4 +27,9 @@ public interface CareerService extends IService<Career> {
      * @param industryId 行业 id
      */
     void checkCareerAndIndustryExist(long careerId, long industryId);
+
+    /**
+     * 刷新本地职业缓存
+     */
+    void refreshCareerMapCache();
 }

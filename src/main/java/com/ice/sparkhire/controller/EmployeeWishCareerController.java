@@ -1,6 +1,7 @@
 package com.ice.sparkhire.controller;
 
 import com.ice.sparkhire.annotation.MustRole;
+import com.ice.sparkhire.auth.UserBasicInfo;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
@@ -8,12 +9,13 @@ import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.model.dto.career.WishCareerAddRequest;
 import com.ice.sparkhire.model.dto.career.WishCareerEditRequest;
 import com.ice.sparkhire.model.enums.UserRoleEnum;
+import com.ice.sparkhire.model.vo.EmployeeWishCareerVO;
+import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.EmployeeWishCareerService;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/Ice-Programmer">chenjiahan</a>
@@ -49,7 +51,7 @@ public class EmployeeWishCareerController {
      * @return 编辑成功
      */
     @PostMapping("/edit")
-//    @MustRole(UserRoleEnum.EMPLOYEE)
+    @MustRole(UserRoleEnum.EMPLOYEE)
     public BaseResponse<Boolean> updateWishCareer(@RequestBody WishCareerEditRequest wishCareerEditRequest) {
         if (wishCareerEditRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -60,5 +62,18 @@ public class EmployeeWishCareerController {
         }
 
         return ResultUtils.success(employeeWishCareerService.editWishCareer(wishCareerEditRequest));
+    }
+
+    /**
+     * 获取我的期望职业列表
+     *
+     * @return 我的期望职业列表
+     */
+    @GetMapping("/list/my")
+    @MustRole(UserRoleEnum.EMPLOYEE)
+    public BaseResponse<List<EmployeeWishCareerVO>> getMyWishCareerList() {
+        // 获取当前登录用户
+        UserBasicInfo currentUser = SecurityContext.getCurrentUser();
+        return ResultUtils.success(employeeWishCareerService.getWishCareerVOListByUserId(currentUser.getId()));
     }
 }
