@@ -134,6 +134,26 @@ public class EmployeeWishCareerServiceImpl extends ServiceImpl<EmployeeWishCaree
         }).toList();
     }
 
+    @Override
+    public Boolean deleteWishCareer(Long id) {
+        // 当前登录用户
+        UserBasicInfo currentUser = SecurityContext.getCurrentUser();
+        EmployeeWishCareer wishCareer = baseMapper.selectOne(Wrappers.<EmployeeWishCareer>lambdaQuery()
+                .eq(EmployeeWishCareer::getId, id));
+
+        if (ObjectUtils.isEmpty(wishCareer)) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "期望职业不存在");
+        }
+
+        if (!Objects.equals(wishCareer.getUserId(), currentUser.getId())) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "仅能删除自己的期望职业！");
+        }
+
+        baseMapper.deleteById(id);
+
+        return true;
+    }
+
     /**
      * 校验参数
      *

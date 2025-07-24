@@ -1,5 +1,6 @@
 package com.ice.sparkhire.common;
 
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import java.io.Serial;
@@ -14,6 +15,7 @@ public class DeleteRequest implements Serializable {
     /**
      * id
      */
+    @Min(value = 1, message = "id 不得小于 0")
     private Long id;
 
     @Serial

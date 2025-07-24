@@ -5,6 +5,7 @@ import com.ice.sparkhire.model.dto.career.WishCareerEditRequest;
 import com.ice.sparkhire.model.entity.EmployeeWishCareer;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ice.sparkhire.model.vo.EmployeeWishCareerVO;
+import jakarta.validation.constraints.Min;
 
 import java.util.List;
 
@@ -38,4 +39,12 @@ public interface EmployeeWishCareerService extends IService<EmployeeWishCareer> 
      * @return 期望职业列表
      */
     List<EmployeeWishCareerVO> getWishCareerVOListByUserId(Long userId);
+
+    /**
+     * 根据 id 删除期望职业
+     *
+     * @param id id
+     * @return 删除成功
+     */
+    Boolean deleteWishCareer(Long id);
 }

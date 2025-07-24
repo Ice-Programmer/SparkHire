@@ -3,6 +3,7 @@ package com.ice.sparkhire.controller;
 import com.ice.sparkhire.annotation.MustRole;
 import com.ice.sparkhire.auth.UserBasicInfo;
 import com.ice.sparkhire.common.BaseResponse;
+import com.ice.sparkhire.common.DeleteRequest;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
@@ -13,6 +14,7 @@ import com.ice.sparkhire.model.vo.EmployeeWishCareerVO;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.EmployeeWishCareerService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -75,5 +77,17 @@ public class EmployeeWishCareerController {
         // 获取当前登录用户
         UserBasicInfo currentUser = SecurityContext.getCurrentUser();
         return ResultUtils.success(employeeWishCareerService.getWishCareerVOListByUserId(currentUser.getId()));
+    }
+
+    /**
+     * 删除期望职业
+     *
+     * @param deleteRequest 删除请求
+     * @return 删除成功
+     */
+    @PostMapping("/delete")
+    @MustRole(UserRoleEnum.EMPLOYEE)
+    public BaseResponse<Boolean> deleteWishCareer(@RequestBody @Valid DeleteRequest deleteRequest) {
+        return ResultUtils.success(employeeWishCareerService.deleteWishCareer(deleteRequest.getId()));
     }
 }
