@@ -19,4 +19,12 @@ public class VerifyCodeRequest implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 7002263956896729551L;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

@@ -2,6 +2,7 @@ package com.ice.sparkhire.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.annotation.CustomCache;
+import com.ice.sparkhire.cache.LocalCache;
 import com.ice.sparkhire.constant.cache.CacheConstant;
 import com.ice.sparkhire.manager.RedisManager;
 import com.ice.sparkhire.model.entity.Major;
@@ -12,6 +13,9 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author chenjiahan
@@ -26,6 +30,14 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major>
     @CustomCache(key = CacheConstant.MAJOR_LIST_KEY, duration = CacheConstant.MONTH_EXPIRE_TIME)
     public List<MajorVO> getMajorList() {
         return baseMapper.selectMajorList();
+    }
+
+    @Override
+    public void refreshMajorMapCache() {
+        List<Major> majorList = baseMapper.selectList(null);
+        Map<Long, Major> majorMap = majorList.stream()
+                .collect(Collectors.toMap(Major::getId, Function.identity()));
+        LocalCache.setMajorMap(majorMap);
     }
 }
 

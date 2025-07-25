@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -89,7 +88,6 @@ public class CareerServiceImpl extends ServiceImpl<CareerMapper, Career>
 
     @Override
     public void refreshCareerMapCache() {
-        // todo 分布式事务改造
         List<Career> careerList = baseMapper.selectList(null);
         Map<Long, Career> careerMap = careerList.stream()
                 .collect(Collectors.toMap(Career::getId, Function.identity()));

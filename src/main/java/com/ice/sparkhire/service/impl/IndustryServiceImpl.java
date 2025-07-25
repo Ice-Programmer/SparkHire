@@ -62,7 +62,6 @@ public class IndustryServiceImpl extends ServiceImpl<IndustryMapper, Industry>
 
     @Override
     public void refreshIndustryMapCache() {
-        // todo 分布式改造
         List<Industry> industryList = baseMapper.selectList(null);
         Map<Long, Industry> industryMap = industryList.stream()
                 .collect(Collectors.toMap(Industry::getId, Function.identity()));

@@ -19,4 +19,9 @@ public interface MajorService extends IService<Major> {
      * @return 获取专业列表
      */
     List<MajorVO> getMajorList();
+
+    /**
+     * 刷新本地专业缓存
+     */
+    void refreshMajorMapCache();
 }

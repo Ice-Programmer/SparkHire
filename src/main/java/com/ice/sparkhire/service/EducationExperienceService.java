@@ -42,7 +42,8 @@ public interface EducationExperienceService extends IService<EducationExperience
     /**
      * 获取我的教育经历
      *
+     * @param userId 用户 id
      * @return 教育经历
      */
-    List<EducationExperienceVO> getMyEducationExpVOList();
+    List<EducationExperienceVO> getEducationExpVOListByUserId(Long userId);
 }

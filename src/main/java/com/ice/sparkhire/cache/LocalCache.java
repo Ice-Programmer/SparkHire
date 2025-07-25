@@ -2,6 +2,8 @@ package com.ice.sparkhire.cache;
 
 import com.ice.sparkhire.model.entity.Career;
 import com.ice.sparkhire.model.entity.Industry;
+import com.ice.sparkhire.model.entity.Major;
+import com.ice.sparkhire.model.entity.School;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +21,12 @@ public class LocalCache {
 
     private static Map<Long, Industry> INDUSTRY_MAP = new HashMap<>();
 
-    public static void setCareerMap(Map<Long, Career> careerMap) {
+    private static Map<Long, School> SCHOOLS_MAP = new HashMap<>();
+
+    private static Map<Long, Major> MAJOR_MAP = new HashMap<>();
+
+    public static synchronized void setCareerMap(Map<Long, Career> careerMap) {
+        CAREER_MAP.clear();
         CAREER_MAP = careerMap;
     }
 
@@ -31,7 +38,8 @@ public class LocalCache {
         return CAREER_MAP != null ? CAREER_MAP : Collections.emptyMap();
     }
 
-    public static void setIndustryMap(Map<Long, Industry> industryMap) {
+    public static synchronized void setIndustryMap(Map<Long, Industry> industryMap) {
+        CAREER_MAP.clear();
         INDUSTRY_MAP = industryMap;
     }
 
@@ -41,5 +49,31 @@ public class LocalCache {
 
     public static Map<Long, Industry> getIndustryMap() {
         return INDUSTRY_MAP != null ? INDUSTRY_MAP : Collections.emptyMap();
+    }
+
+    public static synchronized void setSchoolMap(Map<Long, School> schoolMap) {
+        SCHOOLS_MAP.clear();
+        SCHOOLS_MAP = schoolMap;
+    }
+
+    public static void clearSchoolMap() {
+        SCHOOLS_MAP.clear();
+    }
+
+    public static Map<Long, School> getSchoolMap() {
+        return SCHOOLS_MAP != null ? SCHOOLS_MAP : Collections.emptyMap();
+    }
+
+    public static synchronized void setMajorMap(Map<Long, Major> majorMap) {
+        MAJOR_MAP.clear();
+        MAJOR_MAP = majorMap;
+    }
+
+    public static void clearMajorMap() {
+        MAJOR_MAP.clear();
+    }
+
+    public static Map<Long, Major> getMajorMap() {
+        return MAJOR_MAP != null ? MAJOR_MAP : Collections.emptyMap();
     }
 }

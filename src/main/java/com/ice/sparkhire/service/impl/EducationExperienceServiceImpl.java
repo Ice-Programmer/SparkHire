@@ -3,24 +3,28 @@ package com.ice.sparkhire.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.cache.LocalCache;
+import com.ice.sparkhire.constant.CommonConstant;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;
 import com.ice.sparkhire.model.dto.education.EducationExpAddRequest;
 import com.ice.sparkhire.model.dto.education.EducationExpEditRequest;
 import com.ice.sparkhire.model.entity.EducationExperience;
+import com.ice.sparkhire.model.entity.Major;
+import com.ice.sparkhire.model.entity.School;
 import com.ice.sparkhire.model.vo.EducationExperienceVO;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.EducationExperienceService;
 import com.ice.sparkhire.mapper.EducationExperienceMapper;
-import com.ice.sparkhire.service.MajorService;
 import com.ice.sparkhire.validator.ValidatorUtil;
-import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author chenjiahan
@@ -96,9 +100,28 @@ public class EducationExperienceServiceImpl extends ServiceImpl<EducationExperie
     }
 
     @Override
-    public List<EducationExperienceVO> getMyEducationExpVOList() {
+    public List<EducationExperienceVO> getEducationExpVOListByUserId(Long userId) {
         // 当前登录用户
-        UserBasicInfo currentUser = SecurityContext.getCurrentUser();
-        return baseMapper.selectMyEducationExpInfo(currentUser.getId());
+        List<EducationExperience> experienceList = baseMapper.selectList(Wrappers.<EducationExperience>lambdaQuery()
+                .eq(EducationExperience::getUserId, userId));
+
+        Map<Long, School> schoolMap = LocalCache.getSchoolMap();
+        Map<Long, Major> majorMap = LocalCache.getMajorMap();
+
+        return experienceList.stream().map(experience -> {
+            EducationExperienceVO educationExperienceVO = new EducationExperienceVO();
+            BeanUtils.copyProperties(experience, educationExperienceVO);
+            // 专业信息
+            String majorName = Optional.of(majorMap.get(experience.getMajorId()))
+                    .map(Major::getMajorName)
+                    .orElse(CommonConstant.UNKNOWN);
+            educationExperienceVO.setMajorName(majorName);
+            // 学校信息
+            String schoolName = Optional.of(schoolMap.get(experience.getSchoolId()))
+                    .map(School::getSchoolName)
+                    .orElse(CommonConstant.UNKNOWN);
+            educationExperienceVO.setSchoolName(schoolName);
+            return educationExperienceVO;
+        }).toList();
     }
 }

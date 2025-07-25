@@ -1,6 +1,7 @@
 package com.ice.sparkhire.controller;
 
 import com.ice.sparkhire.annotation.MustRole;
+import com.ice.sparkhire.auth.UserBasicInfo;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.DeleteRequest;
 import com.ice.sparkhire.common.ResultUtils;
@@ -10,6 +11,7 @@ import com.ice.sparkhire.model.dto.education.EducationExpAddRequest;
 import com.ice.sparkhire.model.dto.education.EducationExpEditRequest;
 import com.ice.sparkhire.model.enums.UserRoleEnum;
 import com.ice.sparkhire.model.vo.EducationExperienceVO;
+import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.EducationExperienceService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -84,8 +86,11 @@ public class EducationExpController {
      * @return 教育经历
      */
     @GetMapping("/my")
+    @MustRole(UserRoleEnum.EMPLOYEE)
     public BaseResponse<List<EducationExperienceVO>> getMyEducationExpVOList() {
-        return ResultUtils.success(educationExperienceService.getMyEducationExpVOList());
+        // 当前登录用户
+        UserBasicInfo currentUser = SecurityContext.getCurrentUser();
+        return ResultUtils.success(educationExperienceService.getEducationExpVOListByUserId(currentUser.getId()));
     }
 
 }
