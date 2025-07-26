@@ -10,4 +10,11 @@
             <result property="roleId" column="role_id" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
+
+    <update id="updateUserRole">
+        update user_role ur
+            join role r on r.role_name = #{roleName}
+        set ur.role_id = r.id
+        where ur.user_id = #{userId}
+    </update>
 </mapper>

@@ -4,23 +4,25 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.gson.Gson;
 import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.auth.UserRoleConstant;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;
-import com.ice.sparkhire.mapper.CityMapper;
+import com.ice.sparkhire.mapper.EmployeeMapper;
+import com.ice.sparkhire.mapper.RoleMapper;
+import com.ice.sparkhire.mapper.UserRoleMapper;
 import com.ice.sparkhire.model.dto.employee.EmployeeAddRequest;
 import com.ice.sparkhire.model.dto.employee.EmployeeEditRequest;
-import com.ice.sparkhire.model.entity.City;
 import com.ice.sparkhire.model.entity.Employee;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.CityService;
 import com.ice.sparkhire.service.EmployeeService;
-import com.ice.sparkhire.mapper.EmployeeMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Objects;
 
