@@ -1,6 +1,6 @@
 package com.ice.sparkhire.mapper;
 
-import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.model.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;

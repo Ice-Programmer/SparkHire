@@ -5,7 +5,7 @@ import com.ice.sparkhire.auth.IgnoreAuth;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
-import com.ice.sparkhire.constant.cache.CacheConstant;
+import com.ice.sparkhire.cache.constant.CacheConstant;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;
 import com.ice.sparkhire.manager.RedisManager;

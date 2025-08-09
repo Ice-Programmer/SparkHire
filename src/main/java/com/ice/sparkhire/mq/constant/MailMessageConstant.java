@@ -13,6 +13,8 @@ public class MailMessageConstant {
 
     public static final String VERIFY_CODE_SUBJECT = "【SparkHire】验证码通知";
 
+    public static final String MULTI_LOGIN_WARNING_SUBJECT = "【SparkHire 安全提醒】您的账号在异地设备登录";
+
     /**
      * 验证码邮件模版
      *
@@ -30,5 +32,29 @@ public class MailMessageConstant {
                         感谢您使用【SparkHire】！
                         【Ice Man】团队""",
                 modeEnum.getValue(), verifyCode);
+    }
+
+    /**
+     * 多地登录提醒邮件模板
+     *
+     * @param loginTime     登录时间
+     * @param loginLocation 登录地点
+     * @param deviceType    设备类型
+     * @return 邮件信息
+     */
+    public static String multiLoginWarningMessage(String loginTime, String loginLocation, String deviceType) {
+        return String.format("""
+                        尊敬的【用户】：
+                        您好！我们检测到您的账号于 %s 在【%s】通过【%s】设备登录。
+                        
+                        如非本人操作，您的账号可能存在安全风险，请立即：
+                        1. 修改账号密码
+                        2. 检查账号安全设置
+                        
+                        如确认是本人操作，请忽略此邮件。
+                        
+                        感谢您使用【SparkHire】！
+                        【Ice Man】团队""",
+                loginTime, loginLocation, deviceType);
     }
 }

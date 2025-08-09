@@ -1,4 +1,4 @@
-package com.ice.sparkhire.constant.cache;
+package com.ice.sparkhire.cache.constant;
 
 /**
  * @author <a href="https://github.com/Ice-Programmer">chenjiahan</a>

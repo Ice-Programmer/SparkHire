@@ -1,8 +1,8 @@
 package com.ice.sparkhire.controller;
 
 import com.ice.sparkhire.auth.IgnoreAuth;
-import com.ice.sparkhire.auth.TokenVO;
-import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.auth.vo.TokenVO;
+import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
@@ -12,6 +12,7 @@ import com.ice.sparkhire.manager.TokenManager;
 import com.ice.sparkhire.model.dto.login.UserMailLoginRequest;
 import com.ice.sparkhire.service.UserService;
 import com.ice.sparkhire.utils.DeviceUtil;
+import com.ice.sparkhire.utils.IpUtil;
 import com.ice.sparkhire.validator.ValidatorUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,7 +65,8 @@ public class LoginController {
         // 保存 redis
         String userRole = userBasicInfo.getRole();
         String device = DeviceUtil.getRequestDevice(request);
-        TokenVO tokenVO = tokenManager.createTokenVOAndStore(userBasicInfo, device);
+        String ip = IpUtil.getCurrentIp(request);
+        TokenVO tokenVO = tokenManager.createTokenVOAndStore(userBasicInfo, device, ip);
         log.info("User {} ({} role) Login by {} Successfully! userId: {}",
                 userBasicInfo.getUsername(), userRole, device, userBasicInfo.getId());
 

@@ -1,7 +1,7 @@
 package com.ice.sparkhire.aop;
 
 import com.ice.sparkhire.annotation.MustRole;
-import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;

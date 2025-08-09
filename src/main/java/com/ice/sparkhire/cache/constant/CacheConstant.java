@@ -1,4 +1,4 @@
-package com.ice.sparkhire.constant.cache;
+package com.ice.sparkhire.cache.constant;
 
 /**
  * 缓存相关常量
@@ -6,7 +6,7 @@ package com.ice.sparkhire.constant.cache;
  * @author <a href="https://github.com/Ice-Programmer">chenjiahan</a>
  * @create 2025/7/4 15:37
  */
-public interface CacheConstant extends AuthConstant, BizConstant {
+public interface CacheConstant extends AuthConstant, BizConstant, UserConstant {
 
     /**
      * key内部的连接字符

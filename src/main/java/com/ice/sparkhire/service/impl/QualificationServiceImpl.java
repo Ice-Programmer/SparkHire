@@ -1,9 +1,8 @@
 package com.ice.sparkhire.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.annotation.CustomCache;
-import com.ice.sparkhire.constant.cache.CacheConstant;
+import com.ice.sparkhire.cache.constant.CacheConstant;
 import com.ice.sparkhire.model.entity.Qualification;
 import com.ice.sparkhire.model.enums.QualificationEnum;
 import com.ice.sparkhire.model.vo.QualificationVO;

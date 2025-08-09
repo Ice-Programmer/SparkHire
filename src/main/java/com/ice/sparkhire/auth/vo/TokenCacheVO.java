@@ -1,4 +1,4 @@
-package com.ice.sparkhire.auth;
+package com.ice.sparkhire.auth.vo;
 
 import lombok.Data;
 
@@ -20,7 +20,12 @@ public class TokenCacheVO {
     private String device;
 
     /**
-     * 用户基础信息
+     * 用户 id
      */
-    private UserBasicInfo userBasicInfo;
+    private Long userId;
+
+    /**
+     * 登录 ip 地址
+     */
+    private String ip;
 }

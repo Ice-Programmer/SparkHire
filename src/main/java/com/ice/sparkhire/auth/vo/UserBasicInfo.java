@@ -1,8 +1,7 @@
-package com.ice.sparkhire.auth;
+package com.ice.sparkhire.auth.vo;
 
 import lombok.Data;
 
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -38,9 +37,4 @@ public class UserBasicInfo {
      * 用户角色
      */
     private String role;
-
-    /**
-     * 用户权限
-     */
-    private Set<String> permissions;
 }

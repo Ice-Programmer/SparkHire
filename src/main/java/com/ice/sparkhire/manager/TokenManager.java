@@ -1,20 +1,28 @@
 package com.ice.sparkhire.manager;
 
 import cn.hutool.core.codec.Base64;
-import com.ice.sparkhire.auth.TokenCacheVO;
-import com.ice.sparkhire.auth.TokenVO;
-import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.auth.vo.TokenCacheVO;
+import com.ice.sparkhire.auth.vo.TokenVO;
+import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.auth.UserRoleConstant;
+import com.ice.sparkhire.cache.constant.UserConstant;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.auth.JwtConstant;
 import com.ice.sparkhire.constant.LogColorConstant;
-import com.ice.sparkhire.constant.cache.CacheConstant;
+import com.ice.sparkhire.cache.constant.CacheConstant;
 import com.ice.sparkhire.exception.BusinessException;
+import com.ice.sparkhire.mapper.UserMapper;
+import com.ice.sparkhire.mq.constant.MailMessageConstant;
+import com.ice.sparkhire.mq.producer.EmailMessageProducer;
+import com.ice.sparkhire.mq.task.EmailMessageTask;
+import com.ice.sparkhire.security.SecurityContext;
+import com.ice.sparkhire.utils.DateUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -37,6 +45,11 @@ public class TokenManager {
     @Resource
     private RedisManager redisManager;
 
+    @Resource
+    private EmailMessageProducer emailMessageProducer;
+    @Autowired
+    private UserMapper userMapper;
+
     /**
      * 生成 token 并存储在缓存中
      *
@@ -44,7 +57,7 @@ public class TokenManager {
      * @param device        当前登录设备
      * @return tokenVO
      */
-    public TokenVO createTokenVOAndStore(UserBasicInfo userBasicInfo, String device) {
+    public TokenVO createTokenVOAndStore(UserBasicInfo userBasicInfo, String device, String ip) {
         long current = System.currentTimeMillis();
         String userRole = userBasicInfo.getRole();
         long expireCacheTime = getExpireTime(userRole);
@@ -73,9 +86,16 @@ public class TokenManager {
         TokenCacheVO tokenCacheVO = new TokenCacheVO();
         tokenCacheVO.setAccessToken(accessToken);
         tokenCacheVO.setDevice(device);
-        tokenCacheVO.setUserBasicInfo(userBasicInfo);
-        storeToken(cacheKey, tokenCacheVO, expireCacheTime);
+        tokenCacheVO.setIp(ip);
+        storeToken(cacheKey, tokenCacheVO, userBasicInfo, expireCacheTime);
 
+        // 存储用户信息
+        redisManager.setObject(
+                UserConstant.getUserInfoKey(userId),
+                userBasicInfo,
+                expireCacheTime,
+                TimeUnit.MILLISECONDS
+        );
         return tokenVO;
     }
 
@@ -105,16 +125,19 @@ public class TokenManager {
     /**
      * 存储 AccessToken
      *
-     * @param key          缓存键
-     * @param tokenCacheVO 缓存存储用户凭证信息
-     * @param expireTime   过期时间
+     * @param key           缓存键
+     * @param tokenCacheVO  缓存存储用户凭证信息
+     * @param userBasicInfo 用户信息
+     * @param expireTime    过期时间
      */
-    public void storeToken(String key, TokenCacheVO tokenCacheVO, long expireTime) {
+    public void storeToken(String key, TokenCacheVO tokenCacheVO, UserBasicInfo userBasicInfo, long expireTime) {
         // 判断是当前设备是否已经登录
         if (redisManager.exists(key)) {
             // 把上一个 token 删除，踢下线
             redisManager.delete(key);
             log.info(LogColorConstant.BLUE + "用户 {} 在 {} 设备已踢下线", key, tokenCacheVO.getDevice());
+            // 发布邮件
+            sendMultiLoginWarningEmail(userBasicInfo, tokenCacheVO.getIp(), tokenCacheVO.getDevice());
         }
 
         // 存储 token
@@ -127,7 +150,7 @@ public class TokenManager {
      * @param accessToken accessToken
      * @return 用户基础信息
      */
-    public UserBasicInfo checkTokenAndGetUserBasicInfo(String accessToken) {
+    public Long checkTokenAndGetUserBasicInfo(String accessToken) {
         if (StringUtils.isEmpty(accessToken)) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
         }
@@ -170,7 +193,7 @@ public class TokenManager {
         TokenCacheVO tokenCacheVO = redisManager.getObject(cacheKey, TokenCacheVO.class);
 
         // 返回用户基础信息
-        return tokenCacheVO.getUserBasicInfo();
+        return tokenCacheVO.getUserId();
     }
 
     /**
@@ -198,4 +221,18 @@ public class TokenManager {
         return Base64.encode(key);
     }
 
+    /**
+     * 发送多地登录邮件
+     *
+     * @param currentUser   当前登录用户
+     * @param currentUserIp ip 地址
+     * @param device        设备
+     */
+    private void sendMultiLoginWarningEmail(UserBasicInfo currentUser, String currentUserIp, String device) {
+        EmailMessageTask emailMessageTask = new EmailMessageTask();
+        emailMessageTask.setContent(MailMessageConstant.multiLoginWarningMessage(DateUtil.getCurrentDateStr(), currentUserIp, device));
+        emailMessageTask.setTargetEmail(currentUser.getEmail());
+        emailMessageTask.setSubject(MailMessageConstant.MULTI_LOGIN_WARNING_SUBJECT);
+        emailMessageProducer.sendEmailMessage(emailMessageTask);
+    }
 }

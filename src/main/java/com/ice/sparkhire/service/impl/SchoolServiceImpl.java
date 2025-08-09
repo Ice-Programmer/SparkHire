@@ -3,7 +3,7 @@ package com.ice.sparkhire.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.annotation.CustomCache;
 import com.ice.sparkhire.cache.LocalCache;
-import com.ice.sparkhire.constant.cache.CacheConstant;
+import com.ice.sparkhire.cache.constant.CacheConstant;
 import com.ice.sparkhire.model.entity.School;
 import com.ice.sparkhire.model.vo.SchoolVO;
 import com.ice.sparkhire.service.SchoolService;

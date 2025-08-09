@@ -1,7 +1,7 @@
 package com.ice.sparkhire.controller;
 
 import com.ice.sparkhire.annotation.MustRole;
-import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.DeleteRequest;
 import com.ice.sparkhire.common.ResultUtils;

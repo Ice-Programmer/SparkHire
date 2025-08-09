@@ -1,4 +1,4 @@
-package com.ice.sparkhire.constant.cache;
+package com.ice.sparkhire.cache.constant;
 
 /**
  * 授权缓存相关常量

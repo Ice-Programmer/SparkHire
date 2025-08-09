@@ -1,17 +1,21 @@
 package com.ice.sparkhire.interceptor;
 
 import com.ice.sparkhire.auth.IgnoreAuth;
-import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.auth.vo.UserBasicInfo;
+import com.ice.sparkhire.cache.constant.UserConstant;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.ThrowUtils;
+import com.ice.sparkhire.manager.RedisManager;
 import com.ice.sparkhire.manager.TokenManager;
 import com.ice.sparkhire.security.SecurityContext;
+import com.ice.sparkhire.utils.IpUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -28,6 +32,9 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Resource
     private TokenManager tokenManager;
+
+    @Resource
+    private RedisManager redisManager;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -46,10 +53,19 @@ public class AuthInterceptor implements HandlerInterceptor {
         String accessToken = request.getHeader("Authorization");
 
         // 判断 token 是否有效
-        UserBasicInfo userBasicInfoVO = tokenManager.checkTokenAndGetUserBasicInfo(accessToken);
-        ThrowUtils.throwIf(userBasicInfoVO == null, ErrorCode.NOT_LOGIN_ERROR);
+        Long userId = tokenManager.checkTokenAndGetUserBasicInfo(accessToken);
+        ThrowUtils.throwIf(ObjectUtils.isEmpty(userId), ErrorCode.NOT_LOGIN_ERROR);
+
+        // 获取用户信息
+        UserBasicInfo userBasicInfo = redisManager.getObject(UserConstant.getUserInfoKey(userId), UserBasicInfo.class);
+        ThrowUtils.throwIf(ObjectUtils.isEmpty(userBasicInfo), ErrorCode.NOT_LOGIN_ERROR);
+
+        // 获取当前用户 ip 地址
+        String ip = IpUtil.getCurrentIp(request);
+
         // 保存上下文
-        SecurityContext.setCurrentUser(userBasicInfoVO);
+        SecurityContext.setCurrentUser(userBasicInfo);
+        SecurityContext.setCurrentUserIp(ip);
         return true;
     }
 

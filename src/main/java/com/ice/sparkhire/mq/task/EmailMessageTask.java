@@ -33,28 +33,4 @@ public class EmailMessageTask implements Serializable {
      * 发送内容
      */
     private String content;
-
-    public String getTargetEmail() {
-        return targetEmail;
-    }
-
-    public void setTargetEmail(String targetEmail) {
-        this.targetEmail = targetEmail;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

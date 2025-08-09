@@ -1,4 +1,4 @@
-package com.ice.sparkhire.auth;
+package com.ice.sparkhire.auth.vo;
 
 import lombok.Data;
 

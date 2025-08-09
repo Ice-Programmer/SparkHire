@@ -1,6 +1,6 @@
 package com.ice.sparkhire.service;
 
-import com.ice.sparkhire.auth.UserBasicInfo;
+import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 

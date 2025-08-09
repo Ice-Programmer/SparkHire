@@ -2,7 +2,7 @@ package com.ice.sparkhire.aop;
 
 import com.google.gson.Gson;
 import com.ice.sparkhire.annotation.CustomCache;
-import com.ice.sparkhire.constant.cache.CacheConstant;
+import com.ice.sparkhire.cache.constant.CacheConstant;
 import com.ice.sparkhire.manager.RedisManager;
 import com.ice.sparkhire.model.enums.CacheMode;
 import jakarta.annotation.Resource;
