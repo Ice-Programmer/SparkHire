@@ -2,6 +2,7 @@ package com.ice.sparkhire.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ice.sparkhire.annotation.CustomCache;
 import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.constant.CommonConstant;
 import com.ice.sparkhire.constant.ErrorCode;
@@ -18,6 +19,7 @@ import com.ice.sparkhire.model.entity.UserRole;
 import com.ice.sparkhire.model.enums.UserRoleEnum;
 import com.ice.sparkhire.service.UserService;
 import com.ice.sparkhire.mapper.UserMapper;
+import com.ice.sparkhire.utils.CacheKeyUtil;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +68,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         // 4. 填充基础信息
+        return userBasicInfo;
+    }
+
+    @Override
+    @CustomCache(key = CacheConstant.USER_INFO_PREFIX, duration = CacheConstant.MONTH_EXPIRE_TIME)
+    public UserBasicInfo getUserInfo(Long userId) {
+        UserBasicInfo userBasicInfo = baseMapper.getUserBasicInfoById(userId);
+        ThrowUtils.throwIf(ObjectUtils.isEmpty(userBasicInfo), ErrorCode.SYSTEM_ERROR, "获取用户信息失败，用户 id 不存在");
         return userBasicInfo;
     }
 

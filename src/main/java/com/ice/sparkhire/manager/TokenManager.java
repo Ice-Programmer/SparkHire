@@ -1,28 +1,25 @@
 package com.ice.sparkhire.manager;
 
 import cn.hutool.core.codec.Base64;
+import com.ice.sparkhire.auth.JwtConstant;
+import com.ice.sparkhire.auth.UserRoleConstant;
 import com.ice.sparkhire.auth.vo.TokenCacheVO;
 import com.ice.sparkhire.auth.vo.TokenVO;
 import com.ice.sparkhire.auth.vo.UserBasicInfo;
-import com.ice.sparkhire.auth.UserRoleConstant;
-import com.ice.sparkhire.cache.constant.UserConstant;
-import com.ice.sparkhire.constant.ErrorCode;
-import com.ice.sparkhire.auth.JwtConstant;
-import com.ice.sparkhire.constant.LogColorConstant;
 import com.ice.sparkhire.cache.constant.CacheConstant;
+import com.ice.sparkhire.constant.ErrorCode;
+import com.ice.sparkhire.constant.LogColorConstant;
 import com.ice.sparkhire.exception.BusinessException;
-import com.ice.sparkhire.mapper.UserMapper;
 import com.ice.sparkhire.mq.constant.MailMessageConstant;
 import com.ice.sparkhire.mq.producer.EmailMessageProducer;
 import com.ice.sparkhire.mq.task.EmailMessageTask;
-import com.ice.sparkhire.security.SecurityContext;
+import com.ice.sparkhire.utils.CacheKeyUtil;
 import com.ice.sparkhire.utils.DateUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -47,8 +44,6 @@ public class TokenManager {
 
     @Resource
     private EmailMessageProducer emailMessageProducer;
-    @Autowired
-    private UserMapper userMapper;
 
     /**
      * 生成 token 并存储在缓存中
@@ -87,15 +82,9 @@ public class TokenManager {
         tokenCacheVO.setAccessToken(accessToken);
         tokenCacheVO.setDevice(device);
         tokenCacheVO.setIp(ip);
+        tokenCacheVO.setUserId(userId);
         storeToken(cacheKey, tokenCacheVO, userBasicInfo, expireCacheTime);
 
-        // 存储用户信息
-        redisManager.setObject(
-                UserConstant.getUserInfoKey(userId),
-                userBasicInfo,
-                expireCacheTime,
-                TimeUnit.MILLISECONDS
-        );
         return tokenVO;
     }
 

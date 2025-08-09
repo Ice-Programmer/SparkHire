@@ -75,7 +75,10 @@ public class CustomCacheAop {
         builder.append(key);
         if (args != null) {
             for (Object arg : args) {
-                builder.append(CacheConstant.UNION).append(arg);
+                if (builder.charAt(builder.length() - 1) != ':') {
+                    builder.append(CacheConstant.UNION);
+                }
+                builder.append(arg);
             }
         }
         return builder.toString();

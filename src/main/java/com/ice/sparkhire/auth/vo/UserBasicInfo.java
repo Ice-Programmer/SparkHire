@@ -37,4 +37,5 @@ public class UserBasicInfo {
      * 用户角色
      */
     private String role;
+
 }

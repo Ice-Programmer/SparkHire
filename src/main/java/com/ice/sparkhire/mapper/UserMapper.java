@@ -20,6 +20,14 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 用户基础信息
      */
     UserBasicInfo getUserBasicInfoByEmail(@Param("email") String email);
+
+    /**
+     * 根据用户 id 查询基础信息
+     *
+     * @param userId 用户 id
+     * @return 用户基础信息
+     */
+    UserBasicInfo getUserBasicInfoById(@Param("userId") Long userId);
 }
 
 

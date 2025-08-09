@@ -2,13 +2,11 @@ package com.ice.sparkhire.interceptor;
 
 import com.ice.sparkhire.auth.IgnoreAuth;
 import com.ice.sparkhire.auth.vo.UserBasicInfo;
-import com.ice.sparkhire.cache.constant.UserConstant;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.ThrowUtils;
-import com.ice.sparkhire.manager.RedisManager;
 import com.ice.sparkhire.manager.TokenManager;
 import com.ice.sparkhire.security.SecurityContext;
-import com.ice.sparkhire.utils.IpUtil;
+import com.ice.sparkhire.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +32,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     private TokenManager tokenManager;
 
     @Resource
-    private RedisManager redisManager;
+    private UserService userService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -57,15 +55,11 @@ public class AuthInterceptor implements HandlerInterceptor {
         ThrowUtils.throwIf(ObjectUtils.isEmpty(userId), ErrorCode.NOT_LOGIN_ERROR);
 
         // 获取用户信息
-        UserBasicInfo userBasicInfo = redisManager.getObject(UserConstant.getUserInfoKey(userId), UserBasicInfo.class);
+        UserBasicInfo userBasicInfo = userService.getUserInfo(userId);
         ThrowUtils.throwIf(ObjectUtils.isEmpty(userBasicInfo), ErrorCode.NOT_LOGIN_ERROR);
-
-        // 获取当前用户 ip 地址
-        String ip = IpUtil.getCurrentIp(request);
 
         // 保存上下文
         SecurityContext.setCurrentUser(userBasicInfo);
-        SecurityContext.setCurrentUserIp(ip);
         return true;
     }
 

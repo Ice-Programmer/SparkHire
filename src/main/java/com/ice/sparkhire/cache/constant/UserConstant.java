@@ -16,7 +16,4 @@ public interface UserConstant {
      */
     String USER_INFO_PREFIX = USER_PREFIX + "info:";
 
-    static String getUserInfoKey(Long userId) {
-        return USER_INFO_PREFIX + userId;
-    }
 }

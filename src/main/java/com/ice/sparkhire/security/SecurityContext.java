@@ -14,8 +14,6 @@ public class SecurityContext {
 
     private static final String CURRENT_LOGIN_USER = "LOGIN_USER";
 
-    private static final String CURRENT_USER_IP = "CURRENT_USER_IP";
-
     private static final ThreadLocal<Map<String, Object>> requestContext = ThreadLocal.withInitial(HashMap::new);
 
     /**
@@ -41,31 +39,6 @@ public class SecurityContext {
      */
     public static void removeCurrentUser() {
         requestContext.get().remove(CURRENT_LOGIN_USER);
-    }
-
-    /**
-     * 设置当前登录用户 ip
-     *
-     * @param ip ip 地址
-     */
-    public static void setCurrentUserIp(String ip) {
-        requestContext.get().put(CURRENT_USER_IP, ip);
-    }
-
-    /**
-     * 获取当前登录用户 ip
-     *
-     * @return ip ip 地址
-     */
-    public static String getCurrentUserIp() {
-        return (String) requestContext.get().get(CURRENT_USER_IP);
-    }
-
-    /**
-     * 清楚当前用户 ip
-     */
-    public static void removeCurrentUserIp() {
-        requestContext.get().remove(CURRENT_USER_IP);
     }
 
     /**

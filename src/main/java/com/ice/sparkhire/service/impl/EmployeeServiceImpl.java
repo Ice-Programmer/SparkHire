@@ -14,6 +14,7 @@ import com.ice.sparkhire.model.entity.Employee;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.CityService;
 import com.ice.sparkhire.service.EmployeeService;
+import com.ice.sparkhire.service.UserService;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
@@ -34,12 +35,16 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee>
     @Resource
     private CityService cityService;
 
+    @Resource
+    private UserService userService;
+
     private final static Gson GSON = new Gson();
 
     @Override
     public long addEmployee(EmployeeAddRequest employeeAddRequest) {
         // 获取当前的登录用户
         UserBasicInfo currentUser = SecurityContext.getCurrentUser();
+
 
         // 判断城市 id 是否正确
         cityService.existCity(employeeAddRequest.getCityId());
