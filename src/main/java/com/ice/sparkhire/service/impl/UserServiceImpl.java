@@ -17,6 +17,7 @@ import com.ice.sparkhire.model.entity.Role;
 import com.ice.sparkhire.model.entity.User;
 import com.ice.sparkhire.model.entity.UserRole;
 import com.ice.sparkhire.model.enums.UserRoleEnum;
+import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.UserService;
 import com.ice.sparkhire.mapper.UserMapper;
 import com.ice.sparkhire.utils.CacheKeyUtil;
@@ -27,6 +28,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.DigestUtils;
+
+import java.util.Objects;
 
 /**
  * @author chenjiahan
@@ -79,6 +82,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return userBasicInfo;
     }
 
+    @Override
+    public UserBasicInfo switchUserRole(String role) {
+        // 获取当前登录用户
+        UserBasicInfo currentUser = SecurityContext.getCurrentUser();
+
+        // 1. 校验参数
+        if (Objects.equals(currentUser.getRole(), role)) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, String.format("当前用户角色已经是 「%s」", role));
+        }
+
+        if (!UserRoleEnum.EMPLOYEE.getValue().equals(role) && !UserRoleEnum.EMPLOYER.getValue().equals(role)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "仅能切换 「招聘者」身份和 「应聘者」身份");
+        }
+
+        // 2. 切换用户身份
+        // 2.1 删除缓存
+        redisManager.delete(CacheKeyUtil.getUserInfoKey(currentUser.getId()));
+
+        transactionTemplate.executeWithoutResult(status -> {
+            // 2.2 更新数据库
+            userRoleMapper.updateUserRole(currentUser.getId(), role);
+
+            // 2.3 todo 更新用户权限列表
+        });
+
+
+
+        return getUserInfo(currentUser.getId());
+    }
+
     /**
      * 注册新用户
      *
@@ -86,7 +119,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * @return 用户
      */
     private UserBasicInfo registerUser(String email) {
-        // todo 分布式事务
         transactionTemplate.executeWithoutResult(status -> {
             try {
                 User user = new User();

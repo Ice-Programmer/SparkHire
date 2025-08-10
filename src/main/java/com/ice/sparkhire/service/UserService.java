@@ -25,4 +25,12 @@ public interface UserService extends IService<User> {
      * @return 用户信息
      */
     UserBasicInfo getUserInfo(Long userId);
+
+    /**
+     * 切换当前用户身份
+     *
+     * @param role 用户身份
+     * @return 用户信息
+     */
+    UserBasicInfo switchUserRole(String role);
 }
