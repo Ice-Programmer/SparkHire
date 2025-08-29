@@ -1,9 +1,6 @@
 package com.ice.sparkhire.scheduler;
 
-import com.ice.sparkhire.service.CareerService;
-import com.ice.sparkhire.service.IndustryService;
-import com.ice.sparkhire.service.MajorService;
-import com.ice.sparkhire.service.SchoolService;
+import com.ice.sparkhire.service.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,12 +25,16 @@ public class CacheRefreshScheduler {
     @Resource
     private MajorService majorService;
 
+    @Resource
+    private QualificationService qualificationService;
+
     @PostConstruct
     public void init() {
         careerService.refreshCareerMapCache();
         industryService.refreshIndustryMapCache();
         schoolService.refreshSchoolMapCache();
         majorService.refreshMajorMapCache();
+        qualificationService.refreshQualificationMapCache();
     }
 
     @Scheduled(cron = "0 0 1 * * *")
@@ -46,5 +47,7 @@ public class CacheRefreshScheduler {
         schoolService.refreshSchoolMapCache();
         // 刷新本地专业缓存
         majorService.refreshMajorMapCache();
+        // 刷新本地证书缓存
+        qualificationService.refreshQualificationMapCache();
     }
 }

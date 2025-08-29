@@ -2,18 +2,21 @@ package com.ice.sparkhire.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.annotation.CustomCache;
+import com.ice.sparkhire.cache.LocalCache;
 import com.ice.sparkhire.cache.constant.CacheConstant;
 import com.ice.sparkhire.model.entity.Qualification;
 import com.ice.sparkhire.model.enums.QualificationEnum;
 import com.ice.sparkhire.model.vo.QualificationVO;
 import com.ice.sparkhire.service.QualificationService;
 import com.ice.sparkhire.mapper.QualificationMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
  * @createDate 2025-07-07 14:19:50
  */
 @Service
+@Slf4j
 public class QualificationServiceImpl extends ServiceImpl<QualificationMapper, Qualification>
         implements QualificationService {
 
@@ -51,6 +55,15 @@ public class QualificationServiceImpl extends ServiceImpl<QualificationMapper, Q
         }
 
         return qualificationVOList;
+    }
+
+    @Override
+    public void refreshQualificationMapCache() {
+        List<Qualification> qualificationList = baseMapper.selectList(null);
+        Map<Long, Qualification> qualificationMap = qualificationList.stream()
+                .collect(Collectors.toMap(Qualification::getId, Function.identity()));
+        LocalCache.setQualificationMap(qualificationMap);
+        log.info("refresh industry map...");
     }
 }
 

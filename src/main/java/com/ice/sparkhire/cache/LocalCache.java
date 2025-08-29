@@ -1,9 +1,6 @@
 package com.ice.sparkhire.cache;
 
-import com.ice.sparkhire.model.entity.Career;
-import com.ice.sparkhire.model.entity.Industry;
-import com.ice.sparkhire.model.entity.Major;
-import com.ice.sparkhire.model.entity.School;
+import com.ice.sparkhire.model.entity.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +22,8 @@ public class LocalCache {
 
     private static Map<Long, Major> MAJOR_MAP = new HashMap<>();
 
+    private static Map<Long, Qualification> QUALIFICATION_MAP = new HashMap<>();
+
     public static synchronized void setCareerMap(Map<Long, Career> careerMap) {
         CAREER_MAP.clear();
         CAREER_MAP = careerMap;
@@ -39,7 +38,7 @@ public class LocalCache {
     }
 
     public static synchronized void setIndustryMap(Map<Long, Industry> industryMap) {
-        CAREER_MAP.clear();
+        INDUSTRY_MAP.clear();
         INDUSTRY_MAP = industryMap;
     }
 
@@ -75,5 +74,18 @@ public class LocalCache {
 
     public static Map<Long, Major> getMajorMap() {
         return MAJOR_MAP != null ? MAJOR_MAP : Collections.emptyMap();
+    }
+
+    public static synchronized void setQualificationMap(Map<Long, Qualification> qualificationMap) {
+        QUALIFICATION_MAP.clear();
+        QUALIFICATION_MAP = qualificationMap;
+    }
+
+    public static void clearQualificationMap() {
+        QUALIFICATION_MAP.clear();
+    }
+
+    public static Map<Long, Qualification> getQualificationMap() {
+        return QUALIFICATION_MAP != null ? QUALIFICATION_MAP : Collections.emptyMap();
     }
 }

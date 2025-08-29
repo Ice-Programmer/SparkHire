@@ -36,6 +36,6 @@ public @interface EnumCheck {
 
     Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {}; // 必须要有！
+    Class<? extends Payload>[] payload() default {};
 
 }

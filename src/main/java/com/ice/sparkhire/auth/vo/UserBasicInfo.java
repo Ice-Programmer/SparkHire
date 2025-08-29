@@ -38,4 +38,8 @@ public class UserBasicInfo {
      */
     private String role;
 
+    /**
+     * 用户权限
+     */
+    private Set<String> permissions;
 }

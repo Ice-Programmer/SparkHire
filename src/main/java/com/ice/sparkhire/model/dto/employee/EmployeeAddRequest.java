@@ -42,6 +42,12 @@ public class EmployeeAddRequest implements Serializable {
     private List<String> skillTags;
 
     /**
+     * 证书列表
+     */
+    @Size(max = 20, message = "证书不能超过 20 个")
+    private List<Long> qualifications;
+
+    /**
      * 最高学历
      */
     @EnumCheck(enumClass = EducationEnum.class, message = "学历类型错误")
@@ -63,12 +69,13 @@ public class EmployeeAddRequest implements Serializable {
     /**
      * 居住地
      */
+    @Min(value = 0, message = "城市 id 错误！")
     private Long cityId;
 
     /**
      * 纬度
      */
-    @DecimalMin(value = "-90.0",message = "纬度不能小于 -90")
+    @DecimalMin(value = "-90.0", message = "纬度不能小于 -90")
     @DecimalMax(value = "90.0", message = "纬度不能大于 90")
     private BigDecimal latitude;
 

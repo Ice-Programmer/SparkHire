@@ -28,13 +28,6 @@ public class CityServiceImpl extends ServiceImpl<CityMapper, City>
         implements CityService {
 
     @Override
-    public void existCity(Long cityId) {
-        boolean exists = baseMapper.exists(Wrappers.<City>lambdaQuery()
-                .eq(City::getId, cityId));
-        ThrowUtils.throwIf(!exists, ErrorCode.NOT_FOUND_ERROR, "城市 id 不存在");
-    }
-
-    @Override
     public List<CityVO> getCityList() {
         // 获取所有省份
         Map<Integer, String> provinceMap = Arrays.stream(ProvinceEnum.values())

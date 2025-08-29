@@ -45,6 +45,11 @@ public class Employee {
     private String skillTags;
 
     /**
+     * 证书列表
+     */
+    private String qualifications;
+
+    /**
      * 最高学历
      */
     private Integer education;

@@ -19,4 +19,9 @@ public interface QualificationService extends IService<Qualification> {
      * @return 证书列表
      */
     List<QualificationVO> getQualificationList();
+
+    /**
+     * 刷新证书 map 缓存
+     */
+    void refreshQualificationMapCache();
 }

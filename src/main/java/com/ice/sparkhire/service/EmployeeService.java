@@ -4,6 +4,7 @@ import com.ice.sparkhire.model.dto.employee.EmployeeAddRequest;
 import com.ice.sparkhire.model.dto.employee.EmployeeEditRequest;
 import com.ice.sparkhire.model.entity.Employee;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ice.sparkhire.model.vo.EmployeeVO;
 import jakarta.validation.Valid;
 
 /**
@@ -28,4 +29,12 @@ public interface EmployeeService extends IService<Employee> {
      * @return id
      */
     boolean editEmployee(EmployeeEditRequest employeeEditRequest);
+
+    /**
+     * 根据 id 获取求职者信息
+     *
+     * @param userId 用户 id
+     * @return 求职者信息
+     */
+    EmployeeVO getEmployeeVO(Long userId);
 }

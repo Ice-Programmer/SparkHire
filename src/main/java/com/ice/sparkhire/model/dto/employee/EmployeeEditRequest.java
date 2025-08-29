@@ -44,6 +44,12 @@ public class EmployeeEditRequest implements Serializable {
     private List<String> skillTags;
 
     /**
+     * 证书列表
+     */
+    @Size(max = 20, message = "证书不能超过 20 个")
+    private List<Long> qualifications;
+
+    /**
      * 最高学历
      */
     @EnumCheck(enumClass = EducationEnum.class, message = "学历类型错误")

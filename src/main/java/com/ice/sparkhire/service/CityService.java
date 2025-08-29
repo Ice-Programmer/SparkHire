@@ -14,13 +14,6 @@ import java.util.List;
 public interface CityService extends IService<City> {
 
     /**
-     * 城市 id 是否存在
-     *
-     * @param cityId 城市 id
-     */
-    void existCity(Long cityId);
-
-    /**
      * 城市列表
      *
      * @return 城市列表
