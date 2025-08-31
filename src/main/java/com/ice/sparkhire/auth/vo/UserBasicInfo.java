@@ -37,9 +37,4 @@ public class UserBasicInfo {
      * 用户角色
      */
     private String role;
-
-    /**
-     * 用户权限
-     */
-    private Set<String> permissions;
 }

@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -27,6 +28,9 @@ public class RedisManager {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     private static final Gson GSON = new Gson();
 
@@ -163,13 +167,13 @@ public class RedisManager {
      * @param expireTime 过期时间
      * @param timeUnit   时间单位
      */
-    public void addToSet(String key, Set<Long> values, long expireTime, TimeUnit timeUnit) {
+    public void addToSet(String key, Set<?> values, long expireTime, TimeUnit timeUnit) {
         validateKey(key);
         if (CollectionUtils.isEmpty(values)) {
             return;
         }
         try {
-            stringRedisTemplate.opsForSet().add(key, values.stream().map(String::valueOf).toArray(String[]::new));
+            redisTemplate.opsForSet().add(key, values.toArray(Object[]::new));
             stringRedisTemplate.expire(key, expireTime, timeUnit);
             log.info("Redis addToSet success - key: {}, values: {}", key, values);
         } catch (Exception e) {
@@ -181,17 +185,21 @@ public class RedisManager {
     /**
      * 获取集合
      *
-     * @param key 缓存键
+     * @param key       缓存键
+     * @param valueType 值类型
      * @return 集合
      */
-    public Set<Long> getSet(String key) {
+    public <T> Set<T> getSet(String key, Class<T> valueType) {
         validateKey(key);
         try {
-            Set<String> stringSet = stringRedisTemplate.opsForSet().members(key);
-            if (CollectionUtils.isEmpty(stringSet)) {
+            Set<Object> set = redisTemplate.opsForSet().members(key);
+            if (CollectionUtils.isEmpty(set)) {
                 return Collections.emptySet();
             }
-            return stringSet.stream().map(Long::valueOf).collect(Collectors.toSet());
+            return set.stream()
+                    .filter(valueType::isInstance)
+                    .map(valueType::cast)
+                    .collect(Collectors.toSet());
         } catch (Exception e) {
             log.error("Redis getSet error - key: {}", key, e);
             throw new RuntimeException("Redis getSet error", e);
@@ -226,8 +234,58 @@ public class RedisManager {
     private void validateKeyAndValue(String key, String value) {
         validateKey(key);
         if (StringUtils.isBlank(value)) {
-            throw new IllegalArgumentException("Redis value cannot be empty");
+            throw new IllegalArgumentException("Value cannot be null or empty");
         }
     }
 
+    // ============================== 分布式锁方法 ==============================
+
+    /**
+     * 尝试获取分布式锁
+     *
+     * @param lockKey    锁键
+     * @param waitTime   等待时间
+     * @param leaseTime  锁持有时间
+     * @param timeUnit   时间单位
+     * @return 是否获取成功
+     */
+    public boolean tryLock(String lockKey, long waitTime, long leaseTime, TimeUnit timeUnit) {
+        validateKey(lockKey);
+        try {
+            String lockValue = Thread.currentThread().getId() + ":" + System.currentTimeMillis();
+            long waitTimeMillis = timeUnit.toMillis(waitTime);
+            long leaseTimeMillis = timeUnit.toMillis(leaseTime);
+            long startTime = System.currentTimeMillis();
+            
+            while (System.currentTimeMillis() - startTime < waitTimeMillis) {
+                Boolean success = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, lockValue, leaseTimeMillis, TimeUnit.MILLISECONDS);
+                if (Boolean.TRUE.equals(success)) {
+                    return true;
+                }
+                // 短暂等待后重试
+                Thread.sleep(50);
+            }
+            return false;
+        } catch (Exception e) {
+            log.error("Redis tryLock error - lockKey: {}", lockKey, e);
+            return false;
+        }
+    }
+
+    /**
+     * 释放分布式锁
+     *
+     * @param lockKey 锁键
+     */
+    public void releaseLock(String lockKey) {
+        validateKey(lockKey);
+        try {
+            String lockValue = stringRedisTemplate.opsForValue().get(lockKey);
+            if (lockValue != null && lockValue.startsWith(Thread.currentThread().getId() + ":")) {
+                stringRedisTemplate.delete(lockKey);
+            }
+        } catch (Exception e) {
+            log.error("Redis releaseLock error - lockKey: {}", lockKey, e);
+        }
+    }
 }

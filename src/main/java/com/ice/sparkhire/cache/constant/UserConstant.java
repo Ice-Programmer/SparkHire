@@ -7,13 +7,17 @@ package com.ice.sparkhire.cache.constant;
  */
 public interface UserConstant {
     /**
-     * auth 相关key
+     * auth 相关 key
      */
     String USER_PREFIX = "user:";
 
     /**
-     * 用户信息相关 相关key
+     * 用户信息相关 相关 key
      */
     String USER_INFO_PREFIX = USER_PREFIX + "info:";
 
+    /**
+     * 用户权限 相关 key
+     */
+    String USER_PERMISSION_PREFIX = USER_PREFIX + "permission:";
 }

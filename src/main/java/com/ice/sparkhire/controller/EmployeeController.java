@@ -1,6 +1,7 @@
 package com.ice.sparkhire.controller;
 
 import com.ice.sparkhire.annotation.MustRole;
+import com.ice.sparkhire.auth.PermissionConstant;
 import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
@@ -9,6 +10,7 @@ import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.model.dto.employee.EmployeeAddRequest;
 import com.ice.sparkhire.model.dto.employee.EmployeeEditRequest;
 import com.ice.sparkhire.model.entity.Employee;
+import com.ice.sparkhire.model.entity.Permission;
 import com.ice.sparkhire.model.enums.UserRoleEnum;
 import com.ice.sparkhire.model.vo.EmployeeVO;
 import com.ice.sparkhire.security.SecurityContext;
@@ -71,8 +73,8 @@ public class EmployeeController {
      *
      * @return 求职者信息
      */
-    @GetMapping("/get")
-    @MustRole(UserRoleEnum.EMPLOYEE)
+    @GetMapping("/get/my")
+    @MustRole(permissions = {PermissionConstant.JOB_FAVORITE, PermissionConstant.ADMIN_DASHBOARD_VIEW}, logical = MustRole.Logical.OR)
     public BaseResponse<EmployeeVO> getMyEmployeeVO() {
         UserBasicInfo currentUser = SecurityContext.getCurrentUser();
         return ResultUtils.success(employeeService.getEmployeeVO(currentUser.getId()));

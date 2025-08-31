@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ice.sparkhire.mapper.UserPermissionMapper">
+
+    <resultMap id="BaseResultMap" type="com.ice.sparkhire.model.entity.UserPermission">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="permissionId" column="permission_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="operationId" column="operation_id" jdbcType="BIGINT"/>
+        <result property="expireTime" column="expire_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+    <select id="selectUserActivePermissions" resultType="java.lang.String">
+        select distinct p.permission_name
+        from (
+                 -- 角色权限
+                 select rp.permission_id
+                 from user u
+                          join user_role ur on u.id = ur.user_id
+                          join role_permission rp on ur.role_id = rp.role_id
+                 where u.id = #{userId}
+                 union all
+                 -- 额外授予的权限
+                 select permission_id
+                 from user_permission
+                 where user_id = #{userId}
+                   and type = 1
+                   and is_delete = 0
+                   and (expire_time is null or expire_time > now())) as all_grants
+                 join permission p on all_grants.permission_id = p.id
+        where not exists (select 1
+                          from user_permission up
+                          where up.user_id = #{userId}
+                            and up.permission_id = all_grants.permission_id
+                            and up.type = -1
+                            and up.is_delete = 0
+                            and (up.expire_time is null or up.expire_time > now()))
+    </select>
+</mapper>

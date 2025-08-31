@@ -17,12 +17,28 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MustRole {
     /**
-     * 所需权限
+     * 所需角色
      */
     UserRoleEnum[] value() default {};
+
+    /**
+     * 所需权限
+     */
+    String[] permissions() default {};
 
     /**
      * 是否允许超级管理员跳过权限检查
      */
     boolean allowSuperAdmin() default true;
+
+    /**
+     * 逻辑关系
+     */
+    Logical logical() default Logical.AND;
+
+    enum Logical {
+        AND,
+        OR,
+        NOT
+    }
 }
