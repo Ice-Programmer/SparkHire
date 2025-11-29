@@ -60,9 +60,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 2. 判断用户是否存在
         UserBasicInfo userBasicInfo = baseMapper.getUserBasicInfoByEmail(email);
 
-        // 2.1 不存在新用户插入数据库
+        // 2.1 不存在新用户
         if (ObjectUtils.isEmpty(userBasicInfo)) {
-            userBasicInfo = registerUser(email);
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "用户不存在，请先注册");
         }
 
         // 3. 判断用户身份是否被 ban
@@ -71,6 +71,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         // 4. 填充基础信息
+        return userBasicInfo;
+    }
+
+    @Override
+    public UserBasicInfo userRegisterByMail(String email, String verifyCode) {
+        // 校验邮箱验证码
+        verifyEmailCode(email, verifyCode);
+
+        // 查询用户是否已存在
+        UserBasicInfo userBasicInfo = baseMapper.getUserBasicInfoByEmail(email);
+        if (ObjectUtils.isNotEmpty(userBasicInfo)) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "当前用户已存在，请返回登录页面");
+        }
+
+        userBasicInfo = registerUser(email);
+
         return userBasicInfo;
     }
 
@@ -106,7 +122,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
             // 2.3 todo 更新用户权限列表
         });
-
 
 
         return getUserInfo(currentUser.getId());

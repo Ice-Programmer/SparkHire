@@ -20,6 +20,15 @@ public interface UserService extends IService<User> {
     UserBasicInfo userLoginByMail(String email, String verifyCode);
 
     /**
+     * 用户根据邮箱注册
+     *
+     * @param email      邮箱
+     * @param verifyCode 验证码
+     * @return 用户注册信息
+     */
+    UserBasicInfo userRegisterByMail(String email, String verifyCode);
+
+    /**
      * 从缓存中获取用户信息
      *
      * @return 用户信息

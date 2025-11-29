@@ -5,17 +5,14 @@ import com.ice.sparkhire.auth.vo.TokenVO;
 import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
-import com.ice.sparkhire.constant.ErrorCode;
-import com.ice.sparkhire.exception.BusinessException;
-import com.ice.sparkhire.exception.ThrowUtils;
 import com.ice.sparkhire.manager.TokenManager;
 import com.ice.sparkhire.model.dto.login.UserMailLoginRequest;
 import com.ice.sparkhire.service.UserService;
 import com.ice.sparkhire.utils.DeviceUtil;
 import com.ice.sparkhire.utils.IpUtil;
-import com.ice.sparkhire.validator.ValidatorUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,16 +45,9 @@ public class LoginController {
      */
     @IgnoreAuth
     @PostMapping("/mail")
-    public BaseResponse<TokenVO> userLoginByMail(@RequestBody UserMailLoginRequest userMailLoginRequest, HttpServletRequest request) {
-        if (userMailLoginRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
+    public BaseResponse<TokenVO> userLoginByMail(@RequestBody @Valid UserMailLoginRequest userMailLoginRequest, HttpServletRequest request) {
         String email = userMailLoginRequest.getEmail();
         String verifyCode = userMailLoginRequest.getVerifyCode();
-
-        // 校验参数
-        ThrowUtils.throwIf(!ValidatorUtil.isValidEmail(email), ErrorCode.PARAMS_ERROR, "邮箱格式错误");
-        ThrowUtils.throwIf(verifyCode.length() != 6, ErrorCode.PARAMS_ERROR, "验证码长度错误");
 
         // 登录
         UserBasicInfo userBasicInfo = userService.userLoginByMail(email, verifyCode);

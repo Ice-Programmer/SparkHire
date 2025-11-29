@@ -9,13 +9,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 用户邮箱登录
+ * 用户邮箱注册
  *
  * @author <a href="https://github.com/Ice-Programmer">chenjiahan</a>
  * @create 2025/3/10 10:47
  */
 @Data
-public class UserMailLoginRequest implements Serializable {
+public class UserMailRegisterRequest implements Serializable {
 
     /**
      * 邮箱
