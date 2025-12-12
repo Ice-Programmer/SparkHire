@@ -31,11 +31,6 @@ public class EmployeeVO implements Serializable {
     private Integer age;
 
     /**
-     * 自我评价
-     */
-    private String profile;
-
-    /**
      * 技能标签
      */
     private String skillTags;

@@ -8,7 +8,6 @@
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="userId" column="user_id" jdbcType="BIGINT"/>
         <result property="age" column="age" jdbcType="INTEGER"/>
-        <result property="profile" column="profile" jdbcType="VARCHAR"/>
         <result property="skillTags" column="skill_tags" jdbcType="VARCHAR"/>
         <result property="qualifications" column="qualifications" jdbcType="VARCHAR"/>
         <result property="education" column="education" jdbcType="INTEGER"/>

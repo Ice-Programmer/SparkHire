@@ -30,12 +30,6 @@ public class EmployeeAddRequest implements Serializable {
     private Integer age;
 
     /**
-     * 自我评价
-     */
-    @Length(max = 1000, message = "自我介绍长度不能超过 1000 字!")
-    private String profile;
-
-    /**
      * 技能标签
      */
     @Size(max = 20, message = "技能标签不能超过 20 个")

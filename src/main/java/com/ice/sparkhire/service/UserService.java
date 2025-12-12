@@ -1,8 +1,10 @@
 package com.ice.sparkhire.service;
 
 import com.ice.sparkhire.auth.vo.UserBasicInfo;
+import com.ice.sparkhire.model.dto.user.UserEditRequest;
 import com.ice.sparkhire.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.validation.Valid;
 
 /**
  * @author chenjiahan
@@ -42,4 +44,12 @@ public interface UserService extends IService<User> {
      * @return 用户信息
      */
     UserBasicInfo switchUserRole(String role);
+
+    /**
+     * 更新用户信息
+     *
+     * @param userEditRequest 用户编辑信息
+     * @return 用户信息
+     */
+    UserBasicInfo editUser(@Valid UserEditRequest userEditRequest);
 }

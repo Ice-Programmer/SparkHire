@@ -10,6 +10,7 @@ import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;
 import com.ice.sparkhire.manager.TokenManager;
 import com.ice.sparkhire.model.dto.login.UserMailRegisterRequest;
+import com.ice.sparkhire.model.dto.user.UserEditRequest;
 import com.ice.sparkhire.model.user.UserSwitchRoleRequest;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.UserService;
@@ -92,5 +93,18 @@ public class UserController {
                 userBasicInfo.getUsername(), userRole, device, userBasicInfo.getId());
 
         return ResultUtils.success(tokenVO);
+    }
+
+    /**
+     * 用户更新信息
+     *
+     * @param userEditRequest 用户更新请求
+     * @return 更新成功
+     */
+    @PostMapping("/user/edit")
+    public BaseResponse<UserBasicInfo> editUser(@RequestBody @Valid UserEditRequest userEditRequest) {
+        UserBasicInfo userBasicInfo = userService.editUser(userEditRequest);
+
+        return ResultUtils.success(userBasicInfo);
     }
 }

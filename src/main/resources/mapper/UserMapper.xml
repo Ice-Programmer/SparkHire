@@ -44,6 +44,7 @@
                u.username,
                u.user_avatar,
                u.email,
+               u.gender,
                r.role_name as role
         from user u
                  left join user_role ur on u.id = ur.user_id

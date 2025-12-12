@@ -12,9 +12,12 @@ import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;
 import com.ice.sparkhire.manager.RedisManager;
 import com.ice.sparkhire.mapper.RoleMapper;
+import com.ice.sparkhire.mapper.UserPermissionMapper;
 import com.ice.sparkhire.mapper.UserRoleMapper;
+import com.ice.sparkhire.model.dto.user.UserEditRequest;
 import com.ice.sparkhire.model.entity.Role;
 import com.ice.sparkhire.model.entity.User;
+import com.ice.sparkhire.model.entity.UserPermission;
 import com.ice.sparkhire.model.entity.UserRole;
 import com.ice.sparkhire.model.enums.UserRoleEnum;
 import com.ice.sparkhire.security.SecurityContext;
@@ -24,6 +27,8 @@ import com.ice.sparkhire.utils.CacheKeyUtil;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -51,6 +56,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Resource
     private UserRoleMapper userRoleMapper;
+
+    @Resource
+    private UserPermissionMapper userPermissionMapper;
 
     @Override
     public UserBasicInfo userLoginByMail(String email, String verifyCode) {
@@ -116,14 +124,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 2.1 删除缓存
         redisManager.delete(CacheKeyUtil.getUserInfoKey(currentUser.getId()));
 
-        transactionTemplate.executeWithoutResult(status -> {
-            // 2.2 更新数据库
-            userRoleMapper.updateUserRole(currentUser.getId(), role);
+        // 2.2 更新数据库
+        userRoleMapper.updateUserRole(currentUser.getId(), role);
 
-            // 2.3 todo 更新用户权限列表
-        });
+        return getUserInfo(currentUser.getId());
+    }
 
+    @Override
+    public UserBasicInfo editUser(UserEditRequest userEditRequest) {
+        // 1. 获取当前用户信息
+        UserBasicInfo currentUser = SecurityContext.getCurrentUser();
 
+        // 更新用户基础信息
+        User user = new User();
+        BeanUtils.copyProperties(userEditRequest, user);
+        user.setId(currentUser.getId());
+        baseMapper.updateById(user);
+
+        // 获取用户信息
         return getUserInfo(currentUser.getId());
     }
 

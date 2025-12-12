@@ -2,8 +2,6 @@ package com.ice.sparkhire.auth.vo;
 
 import lombok.Data;
 
-import java.util.Set;
-
 /**
  * 用户基础信息
  *
@@ -27,6 +25,11 @@ public class UserBasicInfo {
      * 用户头像
      */
     private String userAvatar;
+
+    /**
+     * 用户性别
+     */
+    private Integer gender;
 
     /**
      * 邮箱

@@ -7,6 +7,7 @@ import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
+import com.ice.sparkhire.exception.ThrowUtils;
 import com.ice.sparkhire.model.dto.employee.EmployeeAddRequest;
 import com.ice.sparkhire.model.dto.employee.EmployeeEditRequest;
 import com.ice.sparkhire.model.entity.Employee;
@@ -17,6 +18,7 @@ import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.EmployeeService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -74,7 +76,6 @@ public class EmployeeController {
      * @return 求职者信息
      */
     @GetMapping("/get/my")
-    @MustRole(permissions = {PermissionConstant.JOB_FAVORITE, PermissionConstant.ADMIN_DASHBOARD_VIEW}, logical = MustRole.Logical.OR)
     public BaseResponse<EmployeeVO> getMyEmployeeVO() {
         UserBasicInfo currentUser = SecurityContext.getCurrentUser();
         return ResultUtils.success(employeeService.getEmployeeVO(currentUser.getId()));

@@ -103,6 +103,11 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee>
         EmployeeVO employeeVO = new EmployeeVO();
         Employee employee = baseMapper.selectOne(Wrappers.<Employee>lambdaQuery()
                 .eq(Employee::getUserId, userId));
+
+        if (ObjectUtils.isEmpty(employee)) {
+            employee.setUserId(userId);
+            return employeeVO;
+        }
         BeanUtils.copyProperties(employee, employeeVO);
 
         // 获取证书列表

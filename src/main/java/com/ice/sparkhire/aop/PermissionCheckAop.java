@@ -77,7 +77,7 @@ public class PermissionCheckAop {
                         Arrays.toString(permissions),
                         Arrays.toString(userPermissionArray));
                 log.error(message);
-                throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "权限不足");
+                throw new BusinessException(ErrorCode.NO_AUTH_ERROR, message);
             }
         }
     }
