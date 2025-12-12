@@ -105,7 +105,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee>
                 .eq(Employee::getUserId, userId));
 
         if (ObjectUtils.isEmpty(employee)) {
-            employee.setUserId(userId);
+            employeeVO.setUserId(userId);
             return employeeVO;
         }
         BeanUtils.copyProperties(employee, employeeVO);
