@@ -1,26 +1,24 @@
-package com.ice.sparkhire.model.entity;
+package com.ice.sparkhire.model.vo;
 
-import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import lombok.Data;
+import java.util.List;
 
 /**
- * 公司信息
- *
- * @TableName company
+ * @author <a href="https://github.com/Ice-Programmer">chenjiahan</a>
+ * @create 2025/12/13 19:02
  */
-@TableName(value = "company")
 @Data
-public class Company implements Serializable {
+public class CompanyVO implements Serializable {
+
     /**
      * id
      */
-    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -32,11 +30,6 @@ public class Company implements Serializable {
      * 公司介绍
      */
     private String description;
-
-    /**
-     * 相关数量
-     */
-    private Integer postNum;
 
     /**
      * 公司 Logo
@@ -51,12 +44,17 @@ public class Company implements Serializable {
     /**
      * 公司图片
      */
-    private String companyImages;
+    private List<String> companyImageList;
 
     /**
      * 公司产业
      */
     private Long industryId;
+
+    /**
+     * 产业名称
+     */
+    private String industryName;
 
     /**
      * 纬度
@@ -69,32 +67,25 @@ public class Company implements Serializable {
     private BigDecimal longitude;
 
     /**
-     * 工作地点
-     */
-    private String address;
-
-    /**
      * 工作城市 id
      */
     private Long cityId;
+
+    /**
+     * 工作城市名称
+     */
+    private String cityName;
+
+    /**
+     * 详细地址
+     */
+    private String address;
 
     /**
      * 创建时间
      */
     private Date createTime;
 
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer isDelete;
-
-    @TableField(exist = false)
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -4870393669547702885L;
 }

@@ -7,14 +7,12 @@ import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.model.dto.company.CompanyAddRequest;
 import com.ice.sparkhire.model.enums.UserRoleEnum;
+import com.ice.sparkhire.model.vo.CompanyVO;
 import com.ice.sparkhire.service.CompanyService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author <a href="https://github.com/Ice-Programmer">chenjiahan</a>
@@ -45,4 +43,16 @@ public class CompanyController {
 
         return ResultUtils.success(companyId);
     }
+
+    @PostMapping("/get/vo/{companyId}")
+    public BaseResponse<CompanyVO> getCompanyVO(@PathVariable("companyId") Long companyId) {
+        if (companyId == null || companyId <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        CompanyVO companyVO = companyService.getCompanyVO(companyId);
+
+        return ResultUtils.success(companyVO);
+    }
+
 }

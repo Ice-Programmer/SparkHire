@@ -3,6 +3,7 @@ package com.ice.sparkhire.service;
 import com.ice.sparkhire.model.dto.company.CompanyAddRequest;
 import com.ice.sparkhire.model.entity.Company;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ice.sparkhire.model.vo.CompanyVO;
 import jakarta.validation.Valid;
 
 /**
@@ -20,4 +21,11 @@ public interface CompanyService extends IService<Company> {
      */
     long addCompany(CompanyAddRequest companyAddRequest);
 
+    /**
+     * 获取公司信息
+     *
+     * @param companyId 公司 id
+     * @return 公司信息
+     */
+    CompanyVO getCompanyVO(Long companyId);
 }

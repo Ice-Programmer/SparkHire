@@ -1,6 +1,9 @@
 package com.ice.sparkhire.model.dto.company;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -11,10 +14,16 @@ import java.util.List;
 
 /**
  * @author <a href="https://github.com/Ice-Programmer">chenjiahan</a>
- * @create 2025/12/13 16:30
+ * @create 2025/12/13 18:45
  */
 @Data
-public class CompanyAddRequest implements Serializable {
+public class CompanyEditRequest implements Serializable {
+
+    /**
+     * id
+     */
+    @NotNull
+    private Long id;
 
     /**
      * 公司名称
@@ -71,7 +80,7 @@ public class CompanyAddRequest implements Serializable {
      * 详细地址
      */
     @Length(max = 300, message = "公司地址不得超过 300 字！")
-    private String address;
+    private String workAddress;
 
     /**
      * 工作城市 id
@@ -80,5 +89,5 @@ public class CompanyAddRequest implements Serializable {
     private Long cityId;
 
     @Serial
-    private static final long serialVersionUID = 2972940150845570438L;
+    private static final long serialVersionUID = 579153415633954635L;
 }

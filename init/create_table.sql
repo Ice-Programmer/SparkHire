@@ -292,6 +292,7 @@ create table if not exists company
     `latitude`         decimal(10, 6)                          not null comment '纬度',
     `longitude`        decimal(10, 6)                          not null comment '经度',
     `city_id`          bigint                                  not null comment '工作城市 id',
+    `address`          varchar(255)                            null comment '详细地址',
     `create_time`      datetime      default CURRENT_TIMESTAMP not null comment '创建时间',
     `update_time`      datetime      default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     `is_delete`        tinyint       default 0                 not null comment '是否删除'

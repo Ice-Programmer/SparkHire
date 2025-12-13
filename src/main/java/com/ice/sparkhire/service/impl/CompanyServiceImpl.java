@@ -2,6 +2,8 @@ package com.ice.sparkhire.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;
@@ -11,12 +13,16 @@ import com.ice.sparkhire.model.dto.company.CompanyAddRequest;
 import com.ice.sparkhire.model.entity.City;
 import com.ice.sparkhire.model.entity.Company;
 import com.ice.sparkhire.model.entity.Industry;
+import com.ice.sparkhire.model.vo.CompanyVO;
+import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.CompanyService;
 import com.ice.sparkhire.mapper.CompanyMapper;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
+import java.util.List;
 
 /**
  * @author chenjiahan
@@ -26,6 +32,8 @@ import org.springframework.util.ObjectUtils;
 @Service
 public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company>
         implements CompanyService {
+
+    private final static Gson GSON = new Gson();
 
     @Resource
     private IndustryMapper industryMapper;
@@ -46,6 +54,31 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company>
         ThrowUtils.throwIf(result == 0, ErrorCode.OPERATION_ERROR, "公司新增失败，请重试！");
 
         return company.getId();
+    }
+
+    @Override
+    public CompanyVO getCompanyVO(Long companyId) {
+        Company company = baseMapper.selectById(companyId);
+        ThrowUtils.throwIf(ObjectUtils.isEmpty(company), ErrorCode.NOT_FOUND_ERROR);
+
+        City city = cityMapper.selectOne(Wrappers.<City>lambdaQuery()
+                .select(City::getCityName)
+                .eq(City::getId, company.getCityId()));
+
+        Industry industry = industryMapper.selectOne(Wrappers.<Industry>lambdaQuery()
+                .select(Industry::getIndustryName)
+                .eq(Industry::getId, company.getIndustryId()));
+
+        CompanyVO companyVO = new CompanyVO();
+        BeanUtils.copyProperties(company, companyVO);
+
+        companyVO.setCityName(city.getCityName());
+        companyVO.setIndustryName(industry.getIndustryName());
+        List<String> companyImageList = GSON.fromJson(company.getCompanyImages(), new TypeToken<List<String>>() {
+        }.getType());
+        companyVO.setCompanyImageList(companyImageList);
+
+        return companyVO;
     }
 
     /**
