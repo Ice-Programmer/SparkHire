@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ice.sparkhire.mapper.RecruitmentMapper">
+
+    <resultMap id="BaseResultMap" type="com.ice.sparkhire.model.entity.Recruitment">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="jobName" column="job_name" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="companyId" column="company_id" jdbcType="BIGINT"/>
+        <result property="positionId" column="position_id" jdbcType="BIGINT"/>
+        <result property="industryId" column="industry_id" jdbcType="BIGINT"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="educationType" column="education_type" jdbcType="TINYINT"/>
+        <result property="skillTags" column="skill_tags" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="salaryUpper" column="salary_upper" jdbcType="INTEGER"/>
+        <result property="salaryLower" column="salary_lower" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="viewCount" column="view_count" jdbcType="INTEGER"/>
+        <result property="applyCount" column="apply_count" jdbcType="INTEGER"/>
+        <result property="latitude" column="latitude" jdbcType="DECIMAL"/>
+        <result property="longitude" column="longitude" jdbcType="DECIMAL"/>
+        <result property="cityId" column="city_id" jdbcType="BIGINT"/>
+        <result property="workAddress" column="work_address" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+</mapper>

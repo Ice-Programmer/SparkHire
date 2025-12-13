@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ice.sparkhire.mapper.CompanyMapper">
+
+    <resultMap id="BaseResultMap" type="com.ice.sparkhire.model.entity.Company">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="companyName" column="company_name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="postNum" column="post_num" jdbcType="INTEGER"/>
+        <result property="logo" column="logo" jdbcType="VARCHAR"/>
+        <result property="backgroundImage" column="background_image" jdbcType="VARCHAR"/>
+        <result property="companyImages" column="company_images" jdbcType="VARCHAR"/>
+        <result property="industryId" column="industry_id" jdbcType="BIGINT"/>
+        <result property="latitude" column="latitude" jdbcType="DECIMAL"/>
+        <result property="longitude" column="longitude" jdbcType="DECIMAL"/>
+        <result property="cityId" column="city_id" jdbcType="BIGINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+</mapper>

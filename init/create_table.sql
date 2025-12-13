@@ -248,3 +248,51 @@ create table if not exists `city`
     `update_time`   datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     `is_delete`     tinyint  default 0                 not null comment '是否删除'
 ) comment '城市' collate = utf8mb4_unicode_ci;
+
+-- 招聘信息表
+create table if not exists recruitment
+(
+    `id`             bigint auto_increment comment 'id' primary key,
+    `job_name`       varchar(512)                            not null comment '岗位招聘标题',
+    `user_id`        bigint                                  not null comment '岗位发布者id',
+    `company_id`     bigint                                  not null comment '公司id',
+    `position_id`    bigint                                  not null comment '职业id',
+    `industry_id`    bigint                                  not null comment '行业id',
+    `description`    text                                    not null comment '职位详情',
+    `education_type` tinyint                                 null comment '最低学历要求',
+    `skill_tags`     varchar(1024) default '[]'              null comment '职业技术栈 JSON',
+    `type`           int                                     not null comment '职业类型（实习、兼职、春招、社招）',
+    `salary_upper`   int                                     null comment '薪水上限',
+    `salary_lower`   int                                     null comment '薪水下限',
+    `status`         tinyint       default 0                 not null comment '招聘状态 （0 - 招聘中 1 - 结束招聘）',
+    `view_count`     int           default 0                 not null comment '浏览次数',
+    `apply_count`    int           default 0                 not null comment '投递次数',
+    `latitude`       decimal(10, 6)                          not null comment '纬度',
+    `longitude`      decimal(10, 6)                          not null comment '经度',
+    `city_id`        bigint                                  not null comment '工作城市 id',
+    `work_address`   varchar(255)                            null comment '详细地址',
+    `create_time`    datetime      default CURRENT_TIMESTAMP not null comment '创建时间',
+    `update_time`    datetime      default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    `is_delete`      tinyint       default 0                 not null comment '是否删除',
+    index idx_user_id (`user_id`),
+    index idx_company_id (`company_id`)
+) comment '招聘信息' collate = utf8mb4_unicode_ci;
+
+-- 公司信息表
+create table if not exists company
+(
+    `id`               bigint auto_increment comment 'id' primary key,
+    `company_name`     varchar(256)                            not null comment '公司名称',
+    `description`      text                                    not null comment '公司介绍',
+    `post_num`         int           default 0                 not null comment '相关数量',
+    `logo`             varchar(256)                            not null comment '公司 Logo',
+    `background_image` varchar(256)                            null comment '公司背景图片',
+    `company_images`   varchar(1024) default '[]'              null comment '公司图片',
+    `industry_id`      bigint                                  not null comment '公司产业',
+    `latitude`         decimal(10, 6)                          not null comment '纬度',
+    `longitude`        decimal(10, 6)                          not null comment '经度',
+    `city_id`          bigint                                  not null comment '工作城市 id',
+    `create_time`      datetime      default CURRENT_TIMESTAMP not null comment '创建时间',
+    `update_time`      datetime      default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    `is_delete`        tinyint       default 0                 not null comment '是否删除'
+) comment '公司信息' collate = utf8mb4_unicode_ci;
