@@ -1,8 +1,11 @@
 package com.ice.sparkhire.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ice.sparkhire.model.dto.tag.TagAddRequest;
+import com.ice.sparkhire.model.dto.tag.TagQueryRequest;
 import com.ice.sparkhire.model.entity.Tag;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ice.sparkhire.model.vo.TagVO;
 
 /**
 * @author chenjiahan
@@ -17,4 +20,12 @@ public interface TagService extends IService<Tag> {
      * @return tag id
      */
     long addTag(TagAddRequest tagAddRequest);
+
+    /**
+     * 查询 tag 分页
+     *
+     * @param tagQueryRequest tag 分页列表
+     * @return tag 分页信息
+     */
+    Page<TagVO> pageTag(TagQueryRequest tagQueryRequest);
 }
