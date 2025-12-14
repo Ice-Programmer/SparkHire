@@ -109,6 +109,17 @@ create table if not exists `employee`
     index idx_user_id (`user_id`)
 ) comment '求职者' collate = utf8mb4_unicode_ci;
 
+-- tag 表
+create table if not exists `tag`
+(
+    `id`             bigint auto_increment comment 'id' primary key,
+    `tag_name`       varchar(256)                       not null comment '标签名称',
+    `create_user_id` bigint                             not null comment '创建用户 id',
+    `create_time`    datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    `update_time`    datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    unique key `uk_tag_name_del` (`tag_name`)
+) comment 'tag 表' collate = utf8mb4_unicode_ci;
+
 -- 行业表
 create table if not exists `industry`
 (
