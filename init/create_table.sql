@@ -94,7 +94,6 @@ create table if not exists `employee`
     `id`              bigint auto_increment comment 'id' primary key,
     `user_id`         bigint                                  not null comment '用户id',
     `age`             int           default 20                not null comment '年龄',
-    `skill_tags`      varchar(512)                            null comment '技能标签',
     `qualifications`  varchar(1024) default '[]'              not null comment '技能证书列表',
     `education`       int           default 1                 not null comment '最高学历',
     `graduation_year` int                                     not null comment '毕业年份',
@@ -119,6 +118,17 @@ create table if not exists `tag`
     `update_time`    datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     unique key `uk_tag_name_del` (`tag_name`)
 ) comment 'tag 表' collate = utf8mb4_unicode_ci;
+
+-- tag 关系表
+create table if not exists `tag_obj_rel`
+(
+    `id`          bigint auto_increment comment 'id' primary key,
+    `tag_id`      bigint                             not null comment 'tag id',
+    `obj_id`      bigint                             not null comment 'obj_id',
+    `obj_type`    int                                not null comment 'obj type(1-employee/2-recruitment)',
+    `create_time` datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    unique key `uk_tag_obj` (`tag_id`, `obj_id`)
+) comment 'tag_obj_rel' collate = utf8mb4_unicode_ci;
 
 -- 行业表
 create table if not exists `industry`

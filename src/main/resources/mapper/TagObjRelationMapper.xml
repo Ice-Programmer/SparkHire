@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ice.sparkhire.mapper.TagObjRelationMapper">
+
+    <resultMap id="BaseResultMap" type="com.ice.sparkhire.model.entity.TagObjRelation">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tagId" column="tag_id" jdbcType="BIGINT"/>
+        <result property="objId" column="obj_id" jdbcType="BIGINT"/>
+        <result property="objType" column="obj_type" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insertBatch">
+        insert into `tag_obj_rel` (tag_id, obj_type, obj_id)
+        values
+        <foreach collection="tagObjRelations" item="item" separator=",">
+            (#{item.tagId}, #{item.objType}, #{item.objId})
+        </foreach>
+    </insert>
+
+</mapper>

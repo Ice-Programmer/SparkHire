@@ -33,12 +33,6 @@ public class EmployeeEditRequest implements Serializable {
     private Integer age;
 
     /**
-     * 技能标签
-     */
-    @Size(max = 20, message = "技能标签不能超过 20 个")
-    private List<String> skillTags;
-
-    /**
      * 证书列表
      */
     @Size(max = 20, message = "证书不能超过 20 个")

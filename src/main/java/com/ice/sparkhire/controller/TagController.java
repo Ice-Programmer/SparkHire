@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.model.dto.tag.TagAddRequest;
+import com.ice.sparkhire.model.dto.tag.TagBindRequest;
 import com.ice.sparkhire.model.dto.tag.TagQueryRequest;
 import com.ice.sparkhire.model.vo.TagVO;
 import com.ice.sparkhire.service.TagService;
@@ -53,5 +54,19 @@ public class TagController {
         Page<TagVO> tagVOPage = tagService.pageTag(tagQueryRequest);
 
         return ResultUtils.success(tagVOPage);
+    }
+
+    /**
+     * 绑定标签
+     *
+     * @param tagBindRequest 绑定标签信息
+     * @return 绑定数量
+     */
+    @PostMapping("/binding")
+    public BaseResponse<Integer> bindTagsRelation(@RequestBody @Valid TagBindRequest tagBindRequest) {
+
+        int num = tagService.bindTagsRelation(tagBindRequest);
+
+        return ResultUtils.success(num);
     }
 }

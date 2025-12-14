@@ -57,11 +57,6 @@ public class Recruitment implements Serializable {
     private Integer educationType;
 
     /**
-     * 职业技术栈 JSON
-     */
-    private String skillTags;
-
-    /**
      * 职业类型（实习、兼职、春招、社招）
      */
     private Integer type;

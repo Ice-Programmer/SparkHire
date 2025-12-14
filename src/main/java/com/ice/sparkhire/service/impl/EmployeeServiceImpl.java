@@ -63,7 +63,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee>
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeAddRequest, employee);
         employee.setUserId(currentUser.getId());
-        employee.setSkillTags(GSON.toJson(employeeAddRequest.getSkillTags()));
         employee.setQualifications(GSON.toJson(employeeAddRequest.getQualifications()));
 
         try {
@@ -90,7 +89,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee>
                 ErrorCode.NO_AUTH_ERROR, "仅能修改自己的信息");
 
         BeanUtils.copyProperties(employeeEditRequest, employee);
-        employee.setSkillTags(GSON.toJson(employeeEditRequest.getSkillTags()));
         employee.setQualifications(GSON.toJson(employeeEditRequest.getQualifications()));
 
         baseMapper.updateById(employee);
@@ -109,6 +107,8 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee>
             return employeeVO;
         }
         BeanUtils.copyProperties(employee, employeeVO);
+
+        // 获取 tag list
 
         // 获取证书列表
         String qualificationIdsStr = employee.getQualifications();

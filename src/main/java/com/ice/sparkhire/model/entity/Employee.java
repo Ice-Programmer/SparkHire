@@ -35,11 +35,6 @@ public class Employee {
     private Integer age;
 
     /**
-     * 技能标签
-     */
-    private String skillTags;
-
-    /**
      * 证书列表
      */
     private String qualifications;

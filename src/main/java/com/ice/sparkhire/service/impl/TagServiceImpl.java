@@ -5,26 +5,40 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ice.sparkhire.auth.vo.UserBasicInfo;
+import com.ice.sparkhire.common.BaseEnum;
 import com.ice.sparkhire.constant.CommonConstant;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;
+import com.ice.sparkhire.mapper.RecruitmentMapper;
+import com.ice.sparkhire.mapper.TagObjRelationMapper;
+import com.ice.sparkhire.mapper.UserMapper;
 import com.ice.sparkhire.model.dto.tag.TagAddRequest;
+import com.ice.sparkhire.model.dto.tag.TagBindRequest;
 import com.ice.sparkhire.model.dto.tag.TagQueryRequest;
+import com.ice.sparkhire.model.entity.Recruitment;
 import com.ice.sparkhire.model.entity.Tag;
+import com.ice.sparkhire.model.entity.TagObjRelation;
+import com.ice.sparkhire.model.entity.User;
+import com.ice.sparkhire.model.enums.TagObjTypeEnum;
 import com.ice.sparkhire.model.vo.TagVO;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.TagService;
 import com.ice.sparkhire.mapper.TagMapper;
 import com.ice.sparkhire.utils.SqlUtils;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author chenjiahan
@@ -34,6 +48,15 @@ import java.util.List;
 @Service
 public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
         implements TagService {
+
+    @Resource
+    private TagObjRelationMapper tagObjRelationMapper;
+
+    @Resource
+    private UserMapper userMapper;
+
+    @Resource
+    private RecruitmentMapper recruitmentMapper;
 
     @Override
     public long addTag(TagAddRequest tagAddRequest) {
@@ -78,6 +101,61 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
         tagVOPage.setRecords(tagVOList);
 
         return tagVOPage;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int bindTagsRelation(TagBindRequest tagBindRequest) {
+        List<Long> tagIdList = tagBindRequest.getTagIdList();
+
+        // 判断是否都存在
+        Long count = baseMapper.selectCount(Wrappers.<Tag>lambdaQuery()
+                .in(Tag::getId, tagIdList));
+        if (ObjectUtils.isEmpty(count) || count < tagIdList.size()) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "tag id 存在错误");
+        }
+
+        // 判断 obj id 是否存在
+        checkTagObjIdExist(tagBindRequest.getObjType(), tagBindRequest.getObjId());
+
+        Set<TagObjRelation> tagObjRelations = tagIdList.stream().map(tagId -> {
+            TagObjRelation tagRelation = new TagObjRelation();
+            tagRelation.setTagId(tagId);
+            tagRelation.setObjType(tagBindRequest.getObjType());
+            tagRelation.setObjId(tagBindRequest.getObjId());
+            return tagRelation;
+        }).collect(Collectors.toSet());
+
+        // 判断是否有重复
+        boolean exists = tagObjRelationMapper.exists(Wrappers.<TagObjRelation>lambdaQuery()
+                .in(TagObjRelation::getTagId, tagIdList)
+                .eq(TagObjRelation::getObjId, tagBindRequest.getObjId()));
+        ThrowUtils.throwIf(exists, ErrorCode.OPERATION_ERROR, "tag 关联关系已存在！");
+
+        // 创建关联关系
+        tagObjRelationMapper.insert(tagObjRelations);
+
+        return tagObjRelations.size();
+    }
+
+    private void checkTagObjIdExist(int objType, long objId) {
+        UserBasicInfo currentUser = SecurityContext.getCurrentUser();
+        TagObjTypeEnum tagType = BaseEnum.getEnumByValue(TagObjTypeEnum.class, objType);
+
+        switch (tagType) {
+            case EMPLOYEE_TYPE -> {
+                ThrowUtils.throwIf(!Objects.equals(currentUser.getId(), objId), ErrorCode.OPERATION_ERROR, "仅可设置自己的 tag");
+                boolean exists = userMapper.exists(Wrappers.<User>lambdaQuery().eq(User::getId, objId));
+                ThrowUtils.throwIf(!exists, ErrorCode.NOT_FOUND_ERROR, "用户数据不存在");
+            }
+            case RECRUITMENT_TYPE -> {
+                Recruitment recruitment = recruitmentMapper.selectOne(Wrappers.<Recruitment>lambdaQuery()
+                        .select(Recruitment::getUserId)
+                        .eq(Recruitment::getId, objId));
+                ThrowUtils.throwIf(ObjectUtils.isEmpty(recruitment), ErrorCode.NOT_FOUND_ERROR, "招聘数据不存在");
+                ThrowUtils.throwIf(!Objects.equals(recruitment.getUserId(), currentUser.getId()), ErrorCode.OPERATION_ERROR, "仅岗位创建者可更改 tag");
+            }
+        }
     }
 
     /**
