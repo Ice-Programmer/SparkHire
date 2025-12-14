@@ -283,6 +283,7 @@ create table if not exists company
 (
     `id`               bigint auto_increment comment 'id' primary key,
     `company_name`     varchar(256)                            not null comment '公司名称',
+    `create_user_id`   bigint                                  not null comment '创建用户 id',
     `description`      text                                    not null comment '公司介绍',
     `post_num`         int           default 0                 not null comment '相关数量',
     `logo`             varchar(256)                            not null comment '公司 Logo',

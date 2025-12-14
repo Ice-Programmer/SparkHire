@@ -29,6 +29,11 @@ public class Company implements Serializable {
     private String companyName;
 
     /**
+     * 创建用户 id
+     */
+    private Long createUserId;
+
+    /**
      * 公司介绍
      */
     private String description;

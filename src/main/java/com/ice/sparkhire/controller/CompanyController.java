@@ -2,10 +2,12 @@ package com.ice.sparkhire.controller;
 
 import com.ice.sparkhire.annotation.MustRole;
 import com.ice.sparkhire.common.BaseResponse;
+import com.ice.sparkhire.common.DeleteRequest;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.model.dto.company.CompanyAddRequest;
+import com.ice.sparkhire.model.dto.company.CompanyEditRequest;
 import com.ice.sparkhire.model.enums.UserRoleEnum;
 import com.ice.sparkhire.model.vo.CompanyVO;
 import com.ice.sparkhire.service.CompanyService;
@@ -44,6 +46,17 @@ public class CompanyController {
         return ResultUtils.success(companyId);
     }
 
+    @PostMapping("/edit")
+    public BaseResponse<CompanyVO> editCompany(@RequestBody @Valid CompanyEditRequest companyEditRequest) {
+        if (companyEditRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        CompanyVO companyVO = companyService.editCompany(companyEditRequest);
+
+        return ResultUtils.success(companyVO);
+    }
+
     @PostMapping("/get/vo/{companyId}")
     public BaseResponse<CompanyVO> getCompanyVO(@PathVariable("companyId") Long companyId) {
         if (companyId == null || companyId <= 0) {
@@ -53,6 +66,17 @@ public class CompanyController {
         CompanyVO companyVO = companyService.getCompanyVO(companyId);
 
         return ResultUtils.success(companyVO);
+    }
+
+    @PostMapping("/delete")
+    public BaseResponse<Boolean> deleteCompany(@RequestBody DeleteRequest deleteRequest) {
+        if (deleteRequest == null || deleteRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        boolean result = companyService.deleteCompany(deleteRequest.getId());
+
+        return ResultUtils.success(result);
     }
 
 }

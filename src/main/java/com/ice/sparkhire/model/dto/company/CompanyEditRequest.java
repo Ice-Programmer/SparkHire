@@ -80,7 +80,7 @@ public class CompanyEditRequest implements Serializable {
      * 详细地址
      */
     @Length(max = 300, message = "公司地址不得超过 300 字！")
-    private String workAddress;
+    private String address;
 
     /**
      * 工作城市 id
