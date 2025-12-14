@@ -1,24 +1,19 @@
 package com.ice.sparkhire.controller;
 
 import com.ice.sparkhire.annotation.MustRole;
-import com.ice.sparkhire.auth.PermissionConstant;
 import com.ice.sparkhire.auth.vo.UserBasicInfo;
 import com.ice.sparkhire.common.BaseResponse;
 import com.ice.sparkhire.common.ResultUtils;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
-import com.ice.sparkhire.exception.ThrowUtils;
 import com.ice.sparkhire.model.dto.employee.EmployeeAddRequest;
 import com.ice.sparkhire.model.dto.employee.EmployeeEditRequest;
-import com.ice.sparkhire.model.entity.Employee;
-import com.ice.sparkhire.model.entity.Permission;
 import com.ice.sparkhire.model.enums.UserRoleEnum;
 import com.ice.sparkhire.model.vo.EmployeeVO;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.EmployeeService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**

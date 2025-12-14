@@ -36,6 +36,11 @@ public class EmployeeVO implements Serializable {
     private List<EmployeeQualificationVO> qualificationList;
 
     /**
+     * tag
+     */
+    private List<TagVO> tagList;
+
+    /**
      * 最高学历
      */
     private Integer education;

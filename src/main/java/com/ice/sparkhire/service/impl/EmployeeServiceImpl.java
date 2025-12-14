@@ -10,16 +10,15 @@ import com.ice.sparkhire.constant.CommonConstant;
 import com.ice.sparkhire.constant.ErrorCode;
 import com.ice.sparkhire.exception.BusinessException;
 import com.ice.sparkhire.exception.ThrowUtils;
-import com.ice.sparkhire.mapper.CityMapper;
-import com.ice.sparkhire.mapper.EmployeeMapper;
-import com.ice.sparkhire.mapper.EmployeeWishCareerMapper;
-import com.ice.sparkhire.mapper.QualificationMapper;
+import com.ice.sparkhire.mapper.*;
 import com.ice.sparkhire.model.dto.employee.EmployeeAddRequest;
 import com.ice.sparkhire.model.dto.employee.EmployeeEditRequest;
 import com.ice.sparkhire.model.entity.*;
+import com.ice.sparkhire.model.enums.TagObjTypeEnum;
 import com.ice.sparkhire.model.vo.EmployeeVO;
 import com.ice.sparkhire.model.vo.EmployeeWishCareerVO;
 import com.ice.sparkhire.model.vo.QualificationVO;
+import com.ice.sparkhire.model.vo.TagVO;
 import com.ice.sparkhire.security.SecurityContext;
 import com.ice.sparkhire.service.EmployeeService;
 import jakarta.annotation.Resource;
@@ -47,7 +46,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee>
     private CityMapper cityMapper;
 
     @Resource
-    private EmployeeWishCareerMapper employeeWishCareerMapper;
+    private TagObjRelationMapper tagObjRelationMapper;
 
     private final static Gson GSON = new Gson();
 
@@ -109,6 +108,14 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee>
         BeanUtils.copyProperties(employee, employeeVO);
 
         // 获取 tag list
+        List<TagVO> tagVOList = tagObjRelationMapper.selectTagListByObjIdAndObjType(userId, TagObjTypeEnum.EMPLOYEE_TYPE.getValue());
+        employeeVO.setTagList(tagVOList);
+
+        // 获取城市名称
+        City city = cityMapper.selectOne(Wrappers.<City>lambdaQuery()
+                .select(City::getCityName)
+                .eq(City::getId, employee.getCityId()));
+        employeeVO.setCityName(city.getCityName());
 
         // 获取证书列表
         String qualificationIdsStr = employee.getQualifications();

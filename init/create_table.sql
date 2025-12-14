@@ -127,7 +127,8 @@ create table if not exists `tag_obj_rel`
     `obj_id`      bigint                             not null comment 'obj_id',
     `obj_type`    int                                not null comment 'obj type(1-employee/2-recruitment)',
     `create_time` datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    unique key `uk_tag_obj` (`tag_id`, `obj_id`)
+    unique key `uk_tag_obj` (`tag_id`, `obj_id`, `obj_type`),
+    index `uk_obj_id_type` (`obj_id`, `obj_type`)
 ) comment 'tag_obj_rel' collate = utf8mb4_unicode_ci;
 
 -- 行业表

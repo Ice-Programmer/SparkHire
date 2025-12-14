@@ -12,12 +12,13 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <insert id="insertBatch">
-        insert into `tag_obj_rel` (tag_id, obj_type, obj_id)
-        values
-        <foreach collection="tagObjRelations" item="item" separator=",">
-            (#{item.tagId}, #{item.objType}, #{item.objId})
-        </foreach>
-    </insert>
+    <select id="selectTagListByObjIdAndObjType" resultType="com.ice.sparkhire.model.vo.TagVO">
+        SELECT DISTINCT t.id,
+                        t.tag_name
+        FROM tag t
+                 JOIN tag_obj_rel r ON r.tag_id = t.id
+        WHERE r.obj_type = #{obj_type}
+          AND r.obj_id = #{obj_id};
+    </select>
 
 </mapper>
